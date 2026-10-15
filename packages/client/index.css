@@ -1,0 +1,14 @@
+@font-face {
+  font-family: PressStart2P;
+  src: url('/public/font/PressStart2P-Regular.ttf') format('ttf');
+  font-weight: 400;
+  font-style: normal;
+}
+
+:root {
+  --bg-blue-color: #5c94fc;
+}
+
+body {
+  margin: 0;
+}
