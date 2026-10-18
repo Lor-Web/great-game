@@ -1,0 +1,7 @@
+tmp/pgdata
+node_modules
+dist
+.git
+*.log
+lerna-debug.log
+packages/*/node_modules
