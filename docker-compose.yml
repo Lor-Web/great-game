@@ -28,6 +28,15 @@ services:
             - "${SERVER_PORT}:${SERVER_PORT}"
         environment:
           SERVER_PORT: ${SERVER_PORT}
+          # Передаём переменные из .env для подключения к БД
+          DB_HOST: postgres             
+          DB_PORT: "5432"
+          DB_NAME: ${POSTGRES_DB}
+          DB_USER: ${POSTGRES_USER}
+          DB_PASSWORD: ${POSTGRES_PASSWORD}
+        depends_on:
+          postgres:
+            condition: service_healthy
 
     postgres:
       image: postgres:14
@@ -39,4 +48,9 @@ services:
         POSTGRES_DB: ${POSTGRES_DB}
       volumes:
         - ./tmp/pgdata:/var/lib/postgresql/data
-
+      healthcheck:
+        test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
+        interval: 5s
+        timeout: 5s
+        retries: 10
+        start_period: 20s

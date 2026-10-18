@@ -1,28 +1,27 @@
-import { Client } from 'pg'
+import { Pool } from 'pg'
 
-const { POSTGRES_USER, POSTGRES_PASSWORD, POSTGRES_DB, POSTGRES_PORT } =
-  process.env
+const { DB_HOST, DB_PORT, DB_NAME, DB_USER, DB_PASSWORD } = process.env
 
-export const createClientAndConnect = async (): Promise<Client | null> => {
+export const pool = new Pool({
+  host: DB_HOST || 'localhost',
+  port: parseInt(DB_PORT || '5432', 10),
+  database: DB_NAME!,
+  user: DB_USER!,
+  password: DB_PASSWORD!,
+  max: 20,
+  idleTimeoutMillis: 30000,
+  connectionTimeoutMillis: 2000,
+})
+
+// Опционально: проверка подключения при старте (без закрытия соединения)
+export const checkDbConnection = async (): Promise<void> => {
   try {
-    const client = new Client({
-      user: POSTGRES_USER,
-      host: 'localhost',
-      database: POSTGRES_DB,
-      password: POSTGRES_PASSWORD,
-      port: Number(POSTGRES_PORT),
-    })
-
-    await client.connect()
-
+    const client = await pool.connect()
     const res = await client.query('SELECT NOW()')
-    console.log('  ➜ 🎸 Connected to the database at:', res?.rows?.[0].now)
-    client.end()
-
-    return client
+    console.log('  ➜ 🎸 Connected to the database at:', res.rows[0].now)
+    client.release() // не закрываем пул, просто возвращаем соединение обратно
   } catch (e) {
-    console.error(e)
+    console.error('❌ Database connection failed:', e)
+    throw e // чтобы сервер не стартовал, если БД точно недоступна
   }
-
-  return null
 }
