@@ -1,7 +1,5 @@
-
-
-.main-page-hud-header{
-    display: flex;
+.main-page-hud-header {
+  display: flex;
   flex-direction: column;
   justify-content: space-between;
   align-items: center;
@@ -12,35 +10,35 @@
 
 .main-page-background {
   background: var(--bg-blue-color); /* Тот самый синий цвет неба из Марио */
-  font-family: 'Press Start 2P', cursive;
+  font-family: "Press Start 2P", cursive;
   color: #ffffff;
   overflow: hidden;
   width: 100vw;
   height: 100vh;
-  background-image: url('../../../public/main-bg.png');
+  background-image: url("../../../public/main-bg.png");
   background-position-y: bottom;
   background-repeat: repeat-x;
 }
 
 .main-page-logo {
-    font-size: 24px;
-    margin: 56px;
+  font-size: 24px;
+  margin: 56px;
   color: #f8b800;
   text-shadow: 4px 4px #000;
 }
 
 .main-page-navigation {
-    margin-top: 18px;
+  margin-top: 18px;
   display: flex;
   flex-direction: column;
 }
 
-.main-page-nsvigstion-link  {
-    margin-bottom: 12px;
+.main-page-nsvigstion-link {
+  margin-bottom: 12px;
 }
 
 .main-page-body {
-    display: flex;
+  display: flex;
   flex-direction: column;
   margin: auto;
   margin-top: 24px;
@@ -49,7 +47,7 @@
 }
 
 .main-page-start-link {
-    font-size: 32px;
+  font-size: 32px;
   padding: 24px 48px;
   animation: blink 1.5s infinite;
   margin-bottom: 24px;
@@ -60,16 +58,16 @@
 }
 
 @keyframes blink {
-    0%,
-    100% {
-      opacity: 1;
-    }
-    50% {
-      opacity: 0.8;
-    }
+  0%,
+  100% {
+    opacity: 1;
   }
+  50% {
+    opacity: 0.8;
+  }
+}
 
 .main-page-description {
-    background: rgba(0, 0, 0, 0.4);
+  background: rgba(0, 0, 0, 0.4);
   padding: 16px;
 }
