@@ -1,14 +1,14 @@
-.main-page-hud-header {
+.hudheader {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   align-items: center;
   padding: 20px 40px;
-  background: rgba(0, 0, 0, 0.4);
+  background: var(--bg-transparent-substrate);
   border-bottom: 4px solid #000;
 }
 
-.main-page-background {
+.background {
   background: var(--bg-blue-color); /* Тот самый синий цвет неба из Марио */
   font-family: "Press Start 2P", cursive;
   color: #ffffff;
@@ -20,24 +20,32 @@
   background-repeat: repeat-x;
 }
 
-.main-page-logo {
+.logo {
   font-size: 24px;
   margin: 56px;
-  color: #f8b800;
-  text-shadow: 4px 4px #000;
+  color: var(--logo-color);
+  text-shadow: 4px 4px var(--text-shadow);
 }
 
-.main-page-navigation {
+.navigation {
   margin-top: 18px;
   display: flex;
   flex-direction: column;
 }
 
-.main-page-nsvigstion-link {
+.navigation-link {
   margin-bottom: 12px;
+  background-color: var(--button-bg-primary);
+  border-radius: 16px;
+  color: var(--text-light);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  text-decoration: none;
 }
 
-.main-page-body {
+.body {
   display: flex;
   flex-direction: column;
   margin: auto;
@@ -46,12 +54,18 @@
   align-items: center;
 }
 
-.main-page-start-link {
+.start-link {
   font-size: 32px;
   padding: 24px 48px;
   animation: blink 1.5s infinite;
   margin-bottom: 24px;
-
+  background-color: var(--button-bg-accent);
+  border-radius: 16px;
+  color: var(--text-light);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
   &:hover {
     animation: none;
   }
@@ -67,7 +81,8 @@
   }
 }
 
-.main-page-description {
-  background: rgba(0, 0, 0, 0.4);
+.description {
+  background: var(--bg-transparent-substrate);
   padding: 16px;
+  line-height: 1.5em;
 }

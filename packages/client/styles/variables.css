@@ -1,0 +1,10 @@
+:root {
+  --bg-blue-color: #5c94fc;
+  --bg-transparent-substrate: rgba(0, 0, 0, 0.4);
+  --button-bg-primary: #0087fe;
+  --button-bg-accent: #7c5eff;
+  --logo-color: #f8b800;
+
+  --text-shadow: #000;
+  --text-light: #ffffff;
+}
