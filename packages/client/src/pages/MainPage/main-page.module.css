@@ -36,7 +36,7 @@
 .navigation-link {
   margin-bottom: 12px;
   background-color: var(--button-bg-primary);
-  border-radius: 16px;
+  border-radius: 8px;
   color: var(--text-light);
   display: flex;
   align-items: center;
@@ -60,7 +60,7 @@
   animation: blink 1.5s infinite;
   margin-bottom: 24px;
   background-color: var(--button-bg-accent);
-  border-radius: 16px;
+  border-radius: 8px;
   color: var(--text-light);
   display: flex;
   align-items: center;
