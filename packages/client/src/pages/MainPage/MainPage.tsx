@@ -24,17 +24,14 @@ export const MainPage = () => {
         <div className={styles.logo}>GREAT GAME "MARIO ONLINE"</div>
         <nav className={styles.navigation}>
           {NaavigationItems.map(item => (
-            <Link
-              key={item.to}
-              to={item.to}
-              className={styles['navigation-link']}>
+            <Link key={item.to} to={item.to} className={styles.navigationLink}>
               {item.text}
             </Link>
           ))}
         </nav>
       </div>
       <main className={styles.body}>
-        <Link to="/game" className={styles['start-link']}>
+        <Link to="/game" className={styles.startLink}>
           START GAME
         </Link>
         <div className={styles.description}>

@@ -33,7 +33,7 @@
   flex-direction: column;
 }
 
-.navigation-link {
+.navigationLink {
   margin-bottom: 12px;
   background-color: var(--button-bg-primary);
   border-radius: 8px;
@@ -54,7 +54,7 @@
   align-items: center;
 }
 
-.start-link {
+.startLink {
   font-size: 32px;
   padding: 24px 48px;
   animation: blink 1.5s infinite;
