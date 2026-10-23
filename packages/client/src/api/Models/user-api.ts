@@ -1,5 +1,5 @@
-import HTTPTransport from '../services/HTTPTransport'
 import { BaseAPI } from '../base-api'
+import HTTPTransport from '../services/HTTPTransport'
 
 const chatAPIInstance = new HTTPTransport()
 

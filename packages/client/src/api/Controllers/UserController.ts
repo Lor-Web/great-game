@@ -1,7 +1,7 @@
 import UserAPI, {
   type SignInRequest,
-  type UserDTO,
   type SignUpRequest,
+  type UserDTO,
 } from '../Models/user-api'
 
 class UserController {

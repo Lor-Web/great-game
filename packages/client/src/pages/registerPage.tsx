@@ -1,4 +1,4 @@
-import React from 'react'
+import type React from 'react'
 import { Card, Typography } from 'antd'
 import { Helmet } from 'react-helmet-async'
 
