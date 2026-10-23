@@ -1,8 +1,8 @@
+import { LockOutlined, MailOutlined, UserOutlined } from '@ant-design/icons'
+import { Button, Form, Input } from 'antd'
 import type React from 'react'
-import { Form, Input, Button } from 'antd'
-import { UserOutlined, LockOutlined, MailOutlined } from '@ant-design/icons'
-import { useRegister } from './useRegister'
 import { antdCustomValidator } from '../validation/antdCustomValidator'
+import { useRegister } from './useRegister'
 
 const RegisterForm: React.FC = () => {
   const { form, loading, contextHolder, onFinish } = useRegister()

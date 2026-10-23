@@ -1,5 +1,5 @@
-import type React from 'react'
 import { Card, Typography } from 'antd'
+import type React from 'react'
 import { Helmet } from 'react-helmet-async'
 
 import LoginForm from './loginform/loginForm'

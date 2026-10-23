@@ -1,7 +1,7 @@
-import { useState, useEffect, useRef } from 'react'
+import { Form, message } from 'antd'
+import { useEffect, useRef, useState } from 'react'
 import UserController from '../../api/Controllers/UserController'
 import type { SignUpRequest } from '../../api/Models/user-api'
-import { Form, message } from 'antd'
 
 export interface RegisterFields {
   login: string
