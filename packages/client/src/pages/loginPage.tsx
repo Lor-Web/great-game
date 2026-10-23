@@ -3,13 +3,10 @@ import { Card, Typography } from 'antd'
 import { Helmet } from 'react-helmet-async'
 
 import LoginForm from './loginform/loginForm'
-import { usePage } from '../hooks/usePage'
-import { PageInitArgs } from '../routes'
 
 const { Title, Text } = Typography
 
 export const LoginPage: React.FC = () => {
-  usePage({ initPage: initLoginPage })
 
   return (
     <div
@@ -54,6 +51,6 @@ export const LoginPage: React.FC = () => {
 }
 
 // На этапе входа нам обычно не нужно ничего загружать, поэтому оставляем её пустой.
-export const initLoginPage = async ({ dispatch, state }: PageInitArgs) => {
-  // В будущем здесь можно проверить: если пользователь уже авторизован, сделать автоматический редирект на главную страницу
-}
+// export const initLoginPage = async ({ dispatch, state }: PageInitArgs) => {
+//   // В будущем здесь можно проверить: если пользователь уже авторизован, сделать автоматический редирект на главную страницу
+// }

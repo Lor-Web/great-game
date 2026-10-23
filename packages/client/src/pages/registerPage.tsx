@@ -3,13 +3,10 @@ import { Card, Typography } from 'antd'
 import { Helmet } from 'react-helmet-async'
 
 import RegisterForm from './registerform/registerForm'
-import { usePage } from '../hooks/usePage'
-import { PageInitArgs } from '../routes'
 
 const { Title, Text } = Typography
 
 export const RegisterPage: React.FC = () => {
-  usePage({ initPage: initRegisterPage })
 
   return (
     <div
@@ -53,6 +50,6 @@ export const RegisterPage: React.FC = () => {
   )
 }
 
-export const initRegisterPage = async ({ dispatch, state }: PageInitArgs) => {
-  // Оставляем пустой, если перед показом страницы не нужно загружать данные из API
-}
+// export const initRegisterPage = async ({ dispatch, state }: PageInitArgs) => {
+//   // Оставляем пустой, если перед показом страницы не нужно загружать данные из API
+// }
