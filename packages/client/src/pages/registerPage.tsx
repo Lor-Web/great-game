@@ -1,13 +1,11 @@
 import type React from 'react'
 import { Card, Typography } from 'antd'
 import { Helmet } from 'react-helmet-async'
-
 import RegisterForm from './registerform/registerForm'
 
 const { Title, Text } = Typography
 
 export const RegisterPage: React.FC = () => {
-
   return (
     <div
       style={{

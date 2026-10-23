@@ -7,7 +7,6 @@ import LoginForm from './loginform/loginForm'
 const { Title, Text } = Typography
 
 export const LoginPage: React.FC = () => {
-
   return (
     <div
       style={{
