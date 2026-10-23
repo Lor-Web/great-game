@@ -1,0 +1,30 @@
+.page {
+  background-color: var(--bg-blue-color);
+  height: 100vh;
+  overflow-y: auto;
+  padding: 12px;
+  box-sizing: border-box;
+}
+
+.form {
+  font-family: var(--font-game);
+}
+
+.textarea {
+  margin-top: 8px;
+  width: 100%;
+}
+
+.label {
+  color: var(--text-light);
+}
+
+.button {
+  font-family: var(--font-game) !important;
+  color: var(--text-light);
+  background-color: var(--button-bg-primary);
+  border: none;
+  border-radius: 8px;
+  padding: 12px;
+  margin-top: 16px;
+}
