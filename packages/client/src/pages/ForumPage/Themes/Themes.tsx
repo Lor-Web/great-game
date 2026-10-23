@@ -30,9 +30,10 @@ export const Themes = ({ themes }: { themes: Theme[] }) => {
   }, [])
 
   return (
-    <>
+    <main className={styles.page}>
+      <h2 className={styles.title}>Темы раздела</h2>
       <Table className={styles.table} columns={columns} dataSource={themes} />
-      <Button type="primary" onClick={showModal}>
+      <Button className={styles.button} type="primary" onClick={showModal}>
         Новая тема
       </Button>
       <Modal
@@ -44,7 +45,7 @@ export const Themes = ({ themes }: { themes: Theme[] }) => {
         <label htmlFor="theme-name">Назовите новую тему</label>
         <Input id="theme-name"></Input>
       </Modal>
-    </>
+    </main>
   )
 }
 

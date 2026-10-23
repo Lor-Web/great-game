@@ -1,4 +1,23 @@
 .page {
-  font-family: "Press Start 2P", cursive;
+  font-family: var(--font-game);
   background: var(--bg-blue-color);
+  height: 100vh;
+  overflow-y: auto;
+  padding: 12px;
+  box-sizing: border-box;
+}
+
+.title {
+  color: var(--text-light);
+}
+
+.menu {
+  list-style: none;
+  padding: 0;
+}
+
+.table {
+  :global(.ant-table) {
+    font-family: var(--font-game);
+  }
 }

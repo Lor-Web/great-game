@@ -1,22 +1,55 @@
+import { Table } from 'antd'
 import { Helmet } from 'react-helmet-async'
+import { Link } from 'react-router-dom'
 import styles from './forum-page.module.css'
 import { Navigation } from './Navigation/Navigation'
 
-export const ForumPage = () => {
-  return (
-    <>
-      <Helmet>
-        <meta charSet="utf-8" />
-        <title>Форум</title>
-        <meta name="description" content="Форум" />
-      </Helmet>
+interface Topic {
+  id: string
+  title: string
+  themes: number
+  messages: number
+}
 
-      <main className={styles.page}>
-        <Navigation topics={Topics}></Navigation>
-      </main>
-    </>
+interface Props {
+  topics: Array<Topic>
+}
+
+export const ForumPage = ({ topics }: Props) => {
+  topics = Topics //todo get from store
+  return (
+    <main className={styles.page}>
+      <h2 className={styles.title}>Разделы</h2>
+      <Table className={styles.table} columns={columns} dataSource={topics} />
+    </main>
   )
 }
+
+const columns = [
+  {
+    title: 'Раздел',
+    dataIndex: 'title',
+    key: 'title',
+    render: (title: string, record: { id: string }) => (
+      <Link to={`/forum/${record.id}`}>{title}</Link>
+    ),
+  },
+  {
+    title: 'Последнее сообщение',
+    dataIndex: 'lastMessage',
+    key: 'lastMessage',
+  },
+  {
+    title: 'Тем',
+    dataIndex: 'themes',
+    key: 'themes',
+  },
+  {
+    title: 'Сообщений',
+    dataIndex: 'messages',
+    key: 'messages',
+  },
+]
 
 export async function forumSectionsLoader() {
   console.log('get all forum sections')
@@ -47,6 +80,20 @@ export const Topics = [
     lastMessage: 'njhkjhk.khk',
     themes: 12,
     messages: 324,
+  },
+  {
+    id: '125',
+    title: 'Еще важнее',
+    lastMessage: 'ку ку!',
+    themes: 14,
+    messages: 384,
+  },
+  {
+    id: '123',
+    title: 'Неважные',
+    lastMessage: 'Тут что-то написано',
+    themes: 124,
+    messages: 3334,
   },
 ]
 
