@@ -3,7 +3,6 @@ import UserAPI, {
   type UserDTO,
   type SignUpRequest,
   type ProfileUpdateRequest,
-  type PasswordUpdateRequest,
 } from '../Models/user-api'
 
 class UserController {
@@ -54,14 +53,14 @@ class UserController {
   //     });
   // }
 
-  public async updateProfile(data: ProfileUpdateRequest) {
-    try {
-      const updatedUser = await UserAPI.update(data)
-    } catch (error) {
-      console.error('updateProfile error:', error)
-      throw error
-    }
-  }
+  // public async updateProfile(data: ProfileUpdateRequest) {
+  //   try {
+  //     const updatedUser = await UserAPI.update(data)
+  //   } catch (error) {
+  //     console.error('updateProfile error:', error)
+  //     throw error
+  //   }
+  // }
 
   // public async updateAvatar(data: FormData): Promise<void> {
   //   try {
