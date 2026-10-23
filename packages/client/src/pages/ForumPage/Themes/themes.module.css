@@ -1,0 +1,9 @@
+.table {
+  :global(.ant-table) {
+    font-family: "Press Start 2P", cursive;
+  }
+}
+
+.author {
+  font-size: 16px;
+}

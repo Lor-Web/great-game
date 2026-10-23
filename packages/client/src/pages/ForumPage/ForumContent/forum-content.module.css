@@ -1,0 +1,18 @@
+.form {
+  font-family: "Press Start 2P", cursive;
+}
+
+.textarea {
+  margin-top: 8px;
+  width: 100%;
+}
+
+.button {
+  font-family: "Press Start 2P", cursive;
+  color: white;
+  background-color: #0087fe; /* to do --button-bg-primary: */
+  border: none;
+  border-radius: 8px;
+  padding: 12px;
+  margin-top: 16px;
+}
