@@ -1,5 +1,3 @@
 export const ServerErrorPage = () => {
-  return (
-    <h1>ServerErrorPage</h1>
-  )
+  return <h1>ServerErrorPage</h1>
 }

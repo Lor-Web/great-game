@@ -1,5 +1,3 @@
 export const LeaderBoardPage = () => {
-  return (
-    <h1>LeaderBoardPage</h1>
-  )
+  return <h1>LeaderBoardPage</h1>
 }

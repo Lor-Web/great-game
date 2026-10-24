@@ -1,9 +1,7 @@
-import { LoginPage } from './pages/LoginPage/LoginPage'
-import { RegisterPage } from './pages/RegisterPage/RegisterPage'
-import { ProfilePage } from './pages/ProfilePage/ProfilePage'
-import { MainPage } from './pages/MainPage/MainPage'
 import { GamePage } from './pages/GamePage/GamePage'
 import { LeaderBoardPage } from './pages/LeaderBoardPage/LeaderBoardPage'
+import { LoginPage } from './pages/LoginPage/LoginPage'
+import { MainPage } from './pages/MainPage/MainPage'
 /* 
 Код ниже необходимо раскомментить при мердже ветки "5.10 Верстка страницы форума"
 import {
@@ -15,6 +13,8 @@ import { ForumContent } from './pages/ForumPage/ForumContent/ForumContent'
 import { Themes } from './pages/ForumPage/Themes/Themes'
 */
 import { NotFoundPage } from './pages/NotFoundPage/NotFoundPage'
+import { ProfilePage } from './pages/ProfilePage/ProfilePage'
+import { RegisterPage } from './pages/RegisterPage/RegisterPage'
 import { ServerErrorPage } from './pages/ServerErrorPage/ServerErrorPage'
 
 export const routes = [

@@ -1,5 +1,3 @@
 export const GamePage = () => {
-  return (
-    <h1>GamePage</h1>
-  )
+  return <h1>GamePage</h1>
 }
