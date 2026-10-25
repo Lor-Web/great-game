@@ -1,7 +1,7 @@
 import { LockOutlined, MailOutlined, UserOutlined } from '@ant-design/icons'
 import { Button, Form, Input } from 'antd'
 import type React from 'react'
-import { antdCustomValidator } from '../validation/antdCustomValidator'
+import { antdCustomValidator } from '../../validation/antdCustomValidator'
 import { useRegister } from './useRegister'
 
 const RegisterForm: React.FC = () => {

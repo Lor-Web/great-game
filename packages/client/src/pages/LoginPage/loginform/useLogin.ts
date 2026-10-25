@@ -1,7 +1,7 @@
 import { Form, message } from 'antd'
 import { useEffect, useRef, useState } from 'react'
-import UserController from '../../api/Controllers/UserController'
-import type { SignInRequest } from '../../api/Models/user-api'
+import UserController from '../../../api/Controllers/UserController'
+import type { SignInRequest } from '../../../api/Models/user-api'
 
 export interface LoginFields {
   login: string

@@ -1,7 +1,7 @@
 import { LockOutlined, UserOutlined } from '@ant-design/icons'
 import { Button, Checkbox, Form, Input } from 'antd'
 import type React from 'react'
-import { antdCustomValidator } from '../validation/antdCustomValidator'
+import { antdCustomValidator } from '../../validation/antdCustomValidator'
 import { useLogin } from './useLogin'
 
 const LoginForm: React.FC = () => {
@@ -17,7 +17,7 @@ const LoginForm: React.FC = () => {
         onFinish={onFinish}
         layout="vertical"
         size="large">
-        {/* ИСПРАВЛЕНО: Изменили name с "email" на "login" для соответствия API Практикума */}
+
         <Form.Item
           name="login"
           label="Логин"

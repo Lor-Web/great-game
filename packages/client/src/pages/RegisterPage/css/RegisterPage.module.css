@@ -1,0 +1,38 @@
+/* Блок страницы */
+.registerPage {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background-color: #f5f5f5;
+  padding: 20px;
+}
+
+/* Карточка формы */
+.registerPage__card {
+  width: 100%;
+  max-width: 460px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.05);
+}
+
+/* Заголовок */
+.registerPage__title {
+  text-align: center;
+  margin-bottom: 24px !important; /* Перебиваем инлайновые стили Antd */
+}
+
+/* Нижний блок перенаправления */
+.registerPage__footer {
+  text-align: center;
+  margin-top: 16px;
+}
+
+/* Ссылка на авторизацию */
+.registerPage__link {
+  color: #1677ff;
+  text-decoration: none;
+}
+
+.registerPage__link:hover {
+  text-decoration: underline;
+}
