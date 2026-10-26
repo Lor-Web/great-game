@@ -1,8 +1,10 @@
 import { useEffect, useRef } from 'react'
-import { loadGameImages } from '../assets/loader'
-import type { GameImages } from '../assets/manifest'
-import { createGameLoop } from '../core/gameLoop'
 import { drawPreview } from '../helpers'
+import { createGameLoop } from '../utils/gameLoop'
+import { createKeyboardControls } from '../utils/keyboard'
+import { loadGameImages } from '../utils/loader'
+import type { GameImages } from '../utils/manifest'
+import { createPlayer, updatePlayer } from '../utils/player'
 
 export const useGameCanvas = () => {
   const canvasRef = useRef<HTMLCanvasElement>(null)
@@ -15,19 +17,24 @@ export const useGameCanvas = () => {
     let disposed = false
     let images: GameImages | undefined
     let failed = false
+    const player = createPlayer()
+    const controls = createKeyboardControls(canvas)
     // Храним время вне React state, чтобы не перерисовывать компонент каждый кадр.
     let elapsedSeconds = 0
     const loop = createGameLoop({
       update: deltaSeconds => {
         elapsedSeconds += deltaSeconds
+        updatePlayer({ player, input: controls.input, deltaSeconds })
       },
       render: () => {
-        drawPreview({ context, images, failed, elapsedSeconds })
+        drawPreview({ context, images, failed, elapsedSeconds, player })
       },
     })
     const syncVisibility = () => {
-      if (document.hidden || !images) loop.stop()
-      else loop.start()
+      if (document.hidden || !images) {
+        controls.reset()
+        loop.stop()
+      } else loop.start()
     }
     drawPreview({ context })
     // Симуляция начинается только после загрузки всех необходимых спрайтов.
@@ -35,7 +42,8 @@ export const useGameCanvas = () => {
       .then(loadedImages => {
         if (disposed) return
         images = loadedImages
-        drawPreview({ context, images })
+        controls.reset()
+        drawPreview({ context, images, player })
         syncVisibility()
       })
       .catch(() => {
@@ -49,6 +57,7 @@ export const useGameCanvas = () => {
     return () => {
       disposed = true
       loop.stop()
+      controls.dispose()
       document.removeEventListener('visibilitychange', syncVisibility)
     }
   }, [])

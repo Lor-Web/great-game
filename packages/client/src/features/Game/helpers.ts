@@ -1,9 +1,10 @@
+import { GAME_HEIGHT, GAME_WIDTH } from './constants'
 import {
   type AnimationClip,
   animations,
   type GameImages,
-} from './assets/manifest'
-import { GAME_HEIGHT, GAME_WIDTH } from './constants'
+} from './utils/manifest'
+import type { Player } from './utils/player'
 
 type DrawAnimationOptions = {
   context: CanvasRenderingContext2D
@@ -20,6 +21,7 @@ type DrawPreviewOptions = {
   images?: GameImages
   failed?: boolean
   elapsedSeconds?: number
+  player?: Player
 }
 
 export const drawAnimation = ({
@@ -60,6 +62,7 @@ export const drawPreview = ({
   images,
   failed = false,
   elapsedSeconds = 0,
+  player,
 }: DrawPreviewOptions) => {
   context.imageSmoothingEnabled = false
   context.fillStyle = '#92c9e8'
@@ -94,14 +97,23 @@ export const drawPreview = ({
     for (let x = 256; x < 384; x += 32) {
       context.drawImage(tileset, 0, 0, 16, 16, x, 216, 32, 32)
     }
-    drawAnimation({
-      context,
-      images,
-      clip: animations.knightIdle,
-      elapsedSeconds,
-      x: 100,
-      y: 305,
-    })
+    if (player) {
+      const clip =
+        player.animation === 'run'
+          ? animations.knightRun
+          : animations.knightIdle
+      const animationTime =
+        player.animation === 'air' ? 0 : player.animationTime
+      drawAnimation({
+        context,
+        images,
+        clip,
+        elapsedSeconds: animationTime,
+        x: player.x,
+        y: player.y + 8,
+        facingLeft: player.facingLeft,
+      })
+    }
     drawAnimation({
       context,
       images,
@@ -139,7 +151,7 @@ export const drawPreview = ({
   if (failed) {
     message = 'Не удалось загрузить графику. Обновите страницу.'
   } else if (images) {
-    message = 'Анимации готовы · управление появится позже'
+    message = 'A/D или ←/→ — движение · Space — прыжок'
   }
   context.fillText(message, 36, 78)
 }

@@ -19,6 +19,15 @@ export type AnimationClip = {
 }
 
 export const animations = {
+  knightRun: {
+    sprite: 'knight',
+    frameWidth: 32,
+    frameHeight: 32,
+    row: 2,
+    frameCount: 8,
+    fps: 12,
+    loop: true,
+  },
   knightIdle: {
     sprite: 'knight',
     frameWidth: 32,

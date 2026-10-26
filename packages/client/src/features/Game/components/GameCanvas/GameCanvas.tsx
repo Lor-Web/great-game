@@ -10,7 +10,8 @@ const GameCanvas = () => {
       className={styles.canvas}
       width={GAME_WIDTH}
       height={GAME_HEIGHT}
-      aria-label="Прототип платформера. Управление ещё не подключено.">
+      tabIndex={0}
+      aria-label="Прототип платформера. A/D или стрелки — движение, Space — прыжок.">
       Для отображения игры необходим браузер с поддержкой Canvas 2D.
     </canvas>
   )
