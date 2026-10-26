@@ -1,8 +1,10 @@
-import { GameCanvas } from './components/GameCanvas/GameCanvas'
+import GameCanvas from './components/GameCanvas/GameCanvas'
 import styles from './game.module.css'
 
-export const Game = () => (
+const Game = () => (
   <main className={styles.game}>
     <GameCanvas />
   </main>
 )
+
+export default Game

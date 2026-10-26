@@ -1,4 +1,4 @@
-import { Game } from '../../features/Game/Game'
+import Game from '../../features/Game/Game'
 
 const GamePage = () => {
   return <Game />
