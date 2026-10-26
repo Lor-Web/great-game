@@ -1,7 +1,8 @@
 import { Form, message } from 'antd'
 import { useEffect, useRef, useState } from 'react'
-import UserController from '../../../api/Controllers/UserController'
-import type { SignInRequest } from '../../../api/Models/user-api'
+import UserController from '../../../../api/Controllers/UserController'
+import type { SignInRequest } from '../../../../api/Models/user-api'
+import { ErrorMessage } from '../../../../utils/ErrorMessage'
 
 export interface LoginFields {
   login: string
@@ -35,7 +36,7 @@ export const useLogin = () => {
     const { remember: _remember, ...signInData } = values
 
     try {
-      // 1. Вызываем метод авторизации контроллера вместо искусственного Promise и setTimeout
+      // Вызываем метод авторизации контроллера
       await UserController.signin(signInData as SignInRequest)
 
       // Проверяем актуальность компонента (не ушел ли юзер со страницы, пока шел запрос)
@@ -49,22 +50,10 @@ export const useLogin = () => {
         return
       }
 
-      const err = error as Record<string, unknown>
-      let errorMessage = 'Неверный логин или пароль.'
+      // парсим ошибку
+      const errorMessage = ErrorMessage(error, 'Неверный логин или пароль.')
 
-      // Парсим JSON-строку ответа бэкенда, если она пришла
-      if (err && typeof err.response === 'string') {
-        try {
-          const parsed = JSON.parse(err.response) as Record<string, unknown>
-          if (parsed.reason) {
-            errorMessage = String(parsed.reason) // Достаем точный reason от бэкенда
-          }
-        } catch {
-          // оставляем дефолтный текст
-        }
-      }
-
-      // Обработка серверных ошибок валидации через подсветку полей Antd
+      // Подсвечиваем поля в интерфейсе
       form.setFields([
         {
           name: 'login',
@@ -72,7 +61,7 @@ export const useLogin = () => {
         },
         {
           name: 'password',
-          errors: [''], // Подсвечиваем рамку пароля красным
+          errors: [''], // Красим рамку пароля без дублирования текста
         },
       ])
     } finally {

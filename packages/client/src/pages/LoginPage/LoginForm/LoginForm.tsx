@@ -1,8 +1,9 @@
 import { LockOutlined, UserOutlined } from '@ant-design/icons'
 import { Button, Checkbox, Form, Input } from 'antd'
 import type React from 'react'
+import { FormInput } from '../../components/AuthFields/FormInput'
 import { antdCustomValidator } from '../../validation/antdCustomValidator'
-import { useLogin } from './useLogin'
+import { useLogin } from './hooks/useLogin'
 
 const LoginForm: React.FC = () => {
   const { form, loading, contextHolder, onFinish } = useLogin()
@@ -17,33 +18,33 @@ const LoginForm: React.FC = () => {
         onFinish={onFinish}
         layout="vertical"
         size="large">
-
-        <Form.Item
+        <FormInput
           name="login"
           label="Логин"
+          placeholder="Введите ваш логин"
+          prefix={<UserOutlined />}
           rules={[
             { required: true, message: 'Логин' },
             antdCustomValidator('login'),
-          ]}>
-          <Input prefix={<UserOutlined />} placeholder="Введите ваш логин" />
-        </Form.Item>
+          ]}
+        />
 
-        <Form.Item
+        <FormInput
           name="password"
           label="Пароль"
-          rules={[{ required: true, message: 'Введите пароль' }]}>
-          <Input.Password prefix={<LockOutlined />} placeholder="Ваш пароль" />
-        </Form.Item>
+          placeholder="Ваш пароль"
+          prefix={<LockOutlined />}
+          isPassword
+          rules={[{ required: true, message: 'Введите пароль' }]}
+        />
 
         <Form.Item name="remember" valuePropName="checked">
           <Checkbox>Запомнить меня</Checkbox>
         </Form.Item>
 
-        <Form.Item>
-          <Button type="primary" htmlType="submit" block loading={loading}>
-            Войти в аккаунт
-          </Button>
-        </Form.Item>
+        <Button type="primary" htmlType="submit" block loading={loading}>
+          Войти в аккаунт
+        </Button>
       </Form>
     </>
   )

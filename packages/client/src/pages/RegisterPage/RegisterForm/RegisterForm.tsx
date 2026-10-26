@@ -1,8 +1,9 @@
 import { LockOutlined, MailOutlined, UserOutlined } from '@ant-design/icons'
-import { Button, Form, Input } from 'antd'
+import { Button, Form } from 'antd'
 import type React from 'react'
+import { FormInput } from '../../components/AuthFields/FormInput'
 import { antdCustomValidator } from '../../validation/antdCustomValidator'
-import { useRegister } from './useRegister'
+import { useRegister } from './hooks/useRegister'
 
 const RegisterForm: React.FC = () => {
   const { form, loading, contextHolder, onFinish } = useRegister()
@@ -16,72 +17,82 @@ const RegisterForm: React.FC = () => {
         onFinish={onFinish}
         layout="vertical"
         size="large">
-        <Form.Item
+        <FormInput
           name="login"
           label="Логин"
+          placeholder="Login"
+          prefix={<UserOutlined />}
           rules={[
             { required: true, message: 'Логин' },
             antdCustomValidator('login'),
-          ]}>
-          <Input prefix={<UserOutlined />} placeholder="Login" />
-        </Form.Item>
+          ]}
+        />
 
-        <Form.Item
+        <FormInput
           name="email"
           label="E-mail"
+          placeholder="email@example.com"
+          prefix={<MailOutlined />}
           rules={[
             { required: true, message: 'Введите ваш E-mail' },
             antdCustomValidator('email'),
-          ]}>
-          <Input prefix={<MailOutlined />} placeholder="email@example.com" />
-        </Form.Item>
+          ]}
+        />
 
-        <Form.Item
+        <FormInput
           name="first_name"
           label="Имя"
+          placeholder="Имя"
+          prefix={<UserOutlined />}
           rules={[
             { required: true, message: 'Введите ваше имя' },
             antdCustomValidator('first_name'),
-          ]}>
-          <Input prefix={<UserOutlined />} placeholder="Имя" />
-        </Form.Item>
+          ]}
+        />
 
-        <Form.Item
+        <FormInput
           name="second_name"
           label="Фамилия"
+          placeholder="Фамилия"
+          prefix={<UserOutlined />}
           rules={[
             { required: true, message: 'Введите вашу фамилию' },
             antdCustomValidator('second_name'),
-          ]}>
-          <Input prefix={<UserOutlined />} placeholder="Фамилия" />
-        </Form.Item>
+          ]}
+        />
 
-        <Form.Item
+        <FormInput
           name="phone"
           label="Телефон"
+          placeholder="Телефон"
+          prefix={<UserOutlined />}
           rules={[
             { required: true, message: 'Введите ваш телефон' },
             antdCustomValidator('phone'),
-          ]}>
-          <Input prefix={<UserOutlined />} placeholder="Телефон" />
-        </Form.Item>
+          ]}
+        />
 
-        <Form.Item
+        <FormInput
           name="password"
           label="Пароль"
+          placeholder="Пароль"
+          prefix={<LockOutlined />}
+          isPassword
+          hasFeedback
           rules={[
             { required: true, message: 'Введите пароль!' },
             antdCustomValidator('password'),
           ]}
-          hasFeedback>
-          <Input.Password prefix={<LockOutlined />} placeholder="Пароль" />
-        </Form.Item>
+        />
 
-        <Form.Item
+        <FormInput
           name="confirmPassword"
           label="Повторите пароль"
-          dependencies={['password']}
+          placeholder="Повторите пароль"
+          prefix={<LockOutlined />}
+          isPassword
           hasFeedback
+          dependencies={['password']}
           rules={[
             { required: true, message: 'Повторите пароль!' },
             ({ getFieldValue }) => ({
@@ -92,18 +103,12 @@ const RegisterForm: React.FC = () => {
                 return Promise.reject(new Error('Пароли не совпадают!'))
               },
             }),
-          ]}>
-          <Input.Password
-            prefix={<LockOutlined />}
-            placeholder="Повторите пароль"
-          />
-        </Form.Item>
+          ]}
+        />
 
-        <Form.Item>
-          <Button type="primary" htmlType="submit" block loading={loading}>
-            Зарегистрироваться
-          </Button>
-        </Form.Item>
+        <Button type="primary" htmlType="submit" block loading={loading}>
+          Зарегистрироваться
+        </Button>
       </Form>
     </>
   )

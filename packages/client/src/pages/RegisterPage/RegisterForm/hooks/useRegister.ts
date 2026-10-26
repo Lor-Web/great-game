@@ -1,7 +1,8 @@
 import { Form, message } from 'antd'
 import { useEffect, useRef, useState } from 'react'
-import UserController from '../../../api/Controllers/UserController'
-import type { SignUpRequest } from '../../../api/Models/user-api'
+import UserController from '../../../../api/Controllers/UserController'
+import type { SignUpRequest } from '../../../../api/Models/user-api'
+import { ErrorMessage } from '../../../../utils/ErrorMessage'
 
 export interface RegisterFields {
   login: string
@@ -52,39 +53,32 @@ export const useRegister = () => {
     } catch (error: unknown) {
       if (controller.signal.aborted) return
 
-      // Приводим ошибку к безопасному индексируемому словарю Record для чтения ответа сервера
-      const err = error as Record<string, unknown>
+      const errorMessage = ErrorMessage(
+        error,
+        'Ошибка сервера при регистрации.'
+      )
+      const lowerMessage = errorMessage.toLowerCase()
 
-      // Вытягиваем текст технической ошибки
-      let errorMessage = 'Ошибка сервера при регистрации.'
-
-      if (err && typeof err.response === 'string') {
-        try {
-          const parsed = JSON.parse(err.response) as Record<string, unknown>
-          if (parsed.reason) {
-            errorMessage = String(parsed.reason)
-          }
-        } catch {
-          // Если ответ пришел не в формате JSON — оставляем стандартный текст
-        }
-      }
-
-      // Проверяем самые частые ошибки регистрации (дубликаты)
-      if (
-        errorMessage.toLowerCase().includes('login') ||
+      // Точечно распределяем ошибки по полям формы на основе ответа сервера
+      if (lowerMessage.includes('login')) {
+        form.setFields([
+          {
+            name: 'login',
+            errors: ['Этот логин уже занят.'],
+          },
+        ])
+      } else if (
+        lowerMessage.includes('email') ||
         errorMessage === 'EMAIL_ALREADY_TAKEN'
       ) {
-        // Подсвечиваем конкретное поле email или login красным цветом прямо в интерфейсе Ant Design
         form.setFields([
           {
             name: 'email',
-            errors: [
-              'Этот e-mail адрес или логин уже зарегистрирован в системе.',
-            ],
+            errors: ['Этот e-mail адрес уже зарегистрирован в системе.'],
           },
         ])
       } else {
-        // Если это общая сетевая ошибка (например, 500), выводим ее в глобальный тост
+        // Для системных сбоев (например, 500) выводим глобальное всплывающее уведомление
         messageApi.error(errorMessage)
       }
     } finally {
