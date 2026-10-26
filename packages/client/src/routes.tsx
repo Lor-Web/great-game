@@ -16,55 +16,69 @@ import { NotFoundPage } from './pages/NotFoundPage/NotFoundPage'
 import { ProfilePage } from './pages/ProfilePage/ProfilePage'
 import { RegisterPage } from './pages/RegisterPage/RegisterPage'
 import { ServerErrorPage } from './pages/ServerErrorPage/ServerErrorPage'
+import {
+  FORUM_PAGE_PATH,
+  FORUM_SECTION_PAGE_PATH,
+  GAME_PAGE_PATH,
+  LEADERBOARD_PAGE_PATH,
+  LOGIN_PAGE_PATH,
+  MAIN_PAGE_PATH,
+  NOT_FOUND_PAGE_PATH,
+  PROFILE_PAGE_PATH,
+  REGISTER_PAGE_PATH,
+  SERVER_ERROR_PAGE_PATH,
+  THEME_PAGE_PATH,
+} from './shared/constants/routes.constant'
 
 export const routes = [
   {
-    path: '/',
+    path: LOGIN_PAGE_PATH,
     Component: LoginPage,
   },
   {
-    path: '/sign-up',
+    path: REGISTER_PAGE_PATH,
     Component: RegisterPage,
   },
   {
-    path: '/main',
+    path: MAIN_PAGE_PATH,
     Component: MainPage,
   },
   {
-    path: '/profile',
+    path: PROFILE_PAGE_PATH,
     Component: ProfilePage,
   },
   {
-    path: '/game',
+    path: GAME_PAGE_PATH,
     Component: GamePage,
   },
   {
-    path: '/leaderboard',
+    path: LEADERBOARD_PAGE_PATH,
     Component: LeaderBoardPage,
   },
   /* 
-  Код ниже необходимо раскомментить при мердже ветки "5.10 Верстка страницы форума"
+Код ниже необходимо раскомментить при мердже ветки "5.10 Верстка страницы форума"
   {
-    path: '/forum',
+    path: FORUM_PAGE_PATH,
     Component: ForumPage,
     loader: forumSectionsLoader,
   },
   {
-    path: '/forum/:sectionId',
+    path: FORUM_SECTION_PAGE_PATH,
     Component: Themes,
     loader: forumThemesLoader,
   },
   {
-    path: '/theme/:themeId',
+    path: THEME_PAGE_PATH,
     Component: ForumContent,
     loader: forumThemesLoader,
-  },*/
+  },
+  */
   {
-    path: '*',
+    path: NOT_FOUND_PAGE_PATH,
     Component: NotFoundPage,
   },
   {
-    path: '/500',
+    path: SERVER_ERROR_PAGE_PATH,
     Component: ServerErrorPage,
     //далее нужно будет понять что именно будем обрабатывать для 500х
   },
