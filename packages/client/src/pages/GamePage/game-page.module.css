@@ -9,27 +9,3 @@
   background-repeat: repeat-x;
   font-family: "Press Start 2P", monospace;
 }
-
-.gameStats {
-  position: relative;
-  z-index: 1;
-  display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: 24px;
-  color: var(--text-light);
-  text-align: center;
-  width: 100%;
-  max-width: 1400px;
-  margin-inline: auto;
-}
-
-.gameStats > div {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-
-.gameStats span {
-  font-size: 18px;
-  font-weight: 700;
-}

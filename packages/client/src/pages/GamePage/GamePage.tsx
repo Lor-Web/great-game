@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import { GameStart } from './GameStart/GameStart'
+import { GameStats } from './GameStats/GameStats'
 import styles from './game-page.module.css'
 
 export const GamePage = () => {
@@ -20,24 +21,7 @@ export const GamePage = () => {
 
   return (
     <main className={styles.gamePage}>
-      <header className={styles.gameStats}>
-        <div>
-          <span>SCORE</span>
-          <span>000000</span>
-        </div>
-        <div>
-          <span>LIVES</span>
-          <span>♥ ♥ ♥</span>
-        </div>
-        <div>
-          <span>WORLD</span>
-          <span>1-1</span>
-        </div>
-        <div>
-          <span>TIME</span>
-          <span>{timeLeft}</span>
-        </div>
-      </header>
+      <GameStats score={0} lives={3} world="1-1" timeLeft={timeLeft} />
 
       {!isPlaying && <GameStart onStart={() => setIsPlaying(true)} />}
     </main>
