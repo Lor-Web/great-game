@@ -110,7 +110,7 @@ export const drawPreview = ({
         clip,
         elapsedSeconds: animationTime,
         x: player.x,
-        y: player.y + 8,
+        y: player.y + 8, // У спрайта с рыцарем лишние пустые пиксели снизу
         facingLeft: player.facingLeft,
       })
     }
