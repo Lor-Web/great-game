@@ -1,11 +1,12 @@
+import { SpriteId } from '../enums'
+
 export const spriteFiles = {
-  world: 'world_tileset.png',
-  knight: 'knight.png',
-  slime: 'slime_green.png',
-  coin: 'coin.png',
+  [SpriteId.World]: 'world_tileset.png',
+  [SpriteId.Knight]: 'knight.png',
+  [SpriteId.Slime]: 'slime_green.png',
+  [SpriteId.Coin]: 'coin.png',
 }
 
-export type SpriteId = keyof typeof spriteFiles
 export type GameImages = Record<SpriteId, HTMLImageElement>
 
 export type AnimationClip = {
@@ -20,7 +21,7 @@ export type AnimationClip = {
 
 export const animations = {
   knightRun: {
-    sprite: 'knight',
+    sprite: SpriteId.Knight,
     frameWidth: 32,
     frameHeight: 32,
     row: 2,
@@ -29,7 +30,7 @@ export const animations = {
     loop: true,
   },
   knightIdle: {
-    sprite: 'knight',
+    sprite: SpriteId.Knight,
     frameWidth: 32,
     frameHeight: 32,
     row: 0,
@@ -38,7 +39,7 @@ export const animations = {
     loop: true,
   },
   slimeIdle: {
-    sprite: 'slime',
+    sprite: SpriteId.Slime,
     frameWidth: 24,
     frameHeight: 24,
     row: 0,
@@ -47,7 +48,7 @@ export const animations = {
     loop: true,
   },
   coinSpin: {
-    sprite: 'coin',
+    sprite: SpriteId.Coin,
     frameWidth: 16,
     frameHeight: 16,
     row: 0,

@@ -19,7 +19,7 @@ export const useGameCanvas = () => {
     let failed = false
     const player = createPlayer()
     const controls = createKeyboardControls(canvas)
-    // Храним время вне React state, чтобы не перерисовывать компонент каждый кадр.
+
     let elapsedSeconds = 0
     const loop = createGameLoop({
       update: deltaSeconds => {

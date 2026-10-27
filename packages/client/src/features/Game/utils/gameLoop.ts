@@ -1,5 +1,4 @@
-const FIXED_STEP = 1 / 60
-const MAX_FRAME_TIME = 0.1
+import { LOOP_CONFIG } from '../constants'
 
 type GameLoopOptions = {
   update: (deltaSeconds: number) => void
@@ -17,16 +16,17 @@ export const createGameLoop = ({ update, render }: GameLoopOptions) => {
 
     if (previousTime !== null) {
       // requestAnimationFrame передаёт миллисекунды, симуляция работает в секундах.
-      const deltaSeconds = (time - previousTime) / 1000
+      const deltaSeconds =
+        (time - previousTime) / LOOP_CONFIG.millisecondsPerSecond
       // После долгого кадра не пытаемся обработать всё пропущенное время.
-      accumulatedTime += Math.min(deltaSeconds, MAX_FRAME_TIME)
+      accumulatedTime += Math.min(deltaSeconds, LOOP_CONFIG.maxFrameTime)
     }
     previousTime = time
 
     // На быстрых экранах обновление может пропускаться, на медленных — повторяться.
-    while (accumulatedTime >= FIXED_STEP) {
-      update(FIXED_STEP)
-      accumulatedTime -= FIXED_STEP
+    while (accumulatedTime >= LOOP_CONFIG.fixedStep) {
+      update(LOOP_CONFIG.fixedStep)
+      accumulatedTime -= LOOP_CONFIG.fixedStep
     }
 
     render()

@@ -1,3 +1,5 @@
+import { GameKey } from '../enums'
+
 export type GameInput = {
   left: boolean
   right: boolean
@@ -7,11 +9,11 @@ export type GameInput = {
 export const createKeyboardControls = (canvas: HTMLCanvasElement) => {
   const keys = new Set<string>()
   const input: GameInput = { left: false, right: false, jumpPressed: false }
-  const gameKeys = ['KeyA', 'KeyD', 'ArrowLeft', 'ArrowRight', 'Space']
+  const gameKeys = Object.values(GameKey) as string[]
 
   const updateDirection = () => {
-    input.left = keys.has('KeyA') || keys.has('ArrowLeft')
-    input.right = keys.has('KeyD') || keys.has('ArrowRight')
+    input.left = keys.has(GameKey.Left) || keys.has(GameKey.ArrowLeft)
+    input.right = keys.has(GameKey.Right) || keys.has(GameKey.ArrowRight)
   }
 
   const reset = () => {
@@ -25,7 +27,11 @@ export const createKeyboardControls = (canvas: HTMLCanvasElement) => {
     if (!gameKeys.includes(event.code)) return
     event.preventDefault()
     // Удержание Space не запускает новый прыжок после приземления.
-    if (event.code === 'Space' && !event.repeat && !keys.has('Space')) {
+    if (
+      event.code === GameKey.Jump &&
+      !event.repeat &&
+      !keys.has(GameKey.Jump)
+    ) {
       input.jumpPressed = true
     }
     keys.add(event.code)

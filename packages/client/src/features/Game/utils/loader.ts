@@ -1,4 +1,5 @@
-import { type GameImages, type SpriteId, spriteFiles } from './manifest'
+import type { SpriteId } from '../enums'
+import { type GameImages, spriteFiles } from './manifest'
 
 const imageCache = new Map<string, Promise<HTMLImageElement>>()
 
