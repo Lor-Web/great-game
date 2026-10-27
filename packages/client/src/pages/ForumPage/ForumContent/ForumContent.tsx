@@ -1,8 +1,9 @@
 import { Button, Form } from 'antd'
 import TextArea from 'antd/es/input/TextArea'
 import { useCallback } from 'react'
-import { MessageProps } from '../Message/Message'
+import { Message } from '../Message/Message'
 import { MessagesMock } from '../mocks'
+import type { MessageProps } from '../types'
 import styles from './forum-content.module.css'
 
 export const ForumContent = ({ messages }: { messages: MessageProps[] }) => {
@@ -20,7 +21,7 @@ export const ForumContent = ({ messages }: { messages: MessageProps[] }) => {
   return (
     <main className={styles.page}>
       {messages.map(message => (
-        <MessageProps key={message.id} {...message}></MessageProps>
+        <Message key={message.id} {...message}></Message>
       ))}
       <Form form={form} className={styles.form} onFinish={onSubmit}>
         <Form.Item

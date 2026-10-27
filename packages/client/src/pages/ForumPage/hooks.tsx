@@ -1,14 +1,7 @@
 import type { ColumnsType } from 'antd/es/table'
 import { useMemo } from 'react'
 import { Link } from 'react-router-dom'
-
-export interface TopicRecord {
-  id: string
-  title: string
-  lastMessage: string
-  themes: number
-  messages: number
-}
+import type { TopicRecord } from './types'
 
 export const useColumns = () => {
   const columns = useMemo<ColumnsType<TopicRecord>>(

@@ -1,7 +1,8 @@
 import { Button, Input, Modal, Table } from 'antd'
 import { useCallback, useState } from 'react'
 import { ThemesMock } from '../mocks'
-import { type ThemeReacord, useColumns } from './hooks'
+import type { ThemeReacord } from '../types'
+import { useColumns } from './hooks'
 import styles from './themes.module.css'
 
 export const Themes = ({ themes }: { themes: ThemeReacord[] }) => {

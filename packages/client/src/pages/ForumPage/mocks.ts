@@ -1,4 +1,4 @@
-import type { TopicRecord } from './hooks'
+import type { TopicRecord } from './types'
 
 export const Topics: TopicRecord[] = [
   {

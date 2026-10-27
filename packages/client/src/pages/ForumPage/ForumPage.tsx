@@ -1,13 +1,10 @@
 import { Table } from 'antd'
 import styles from './forum-page.module.css'
-import { type TopicRecord, useColumns } from './hooks'
+import { useColumns } from './hooks'
 import { ThemesMock, Topics } from './mocks'
+import type { ForumPageProps } from './types'
 
-interface Props {
-  topics: Array<TopicRecord>
-}
-
-export const ForumPage = ({ topics }: Props) => {
+export const ForumPage = ({ topics }: ForumPageProps) => {
   topics = Topics //todo get from store
   const columns = useColumns()
 

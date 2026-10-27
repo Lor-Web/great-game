@@ -1,17 +1,8 @@
 import { Avatar, Card } from 'antd'
+import type { MessageProps } from '../types'
 import styles from './message.module.css'
 
-export interface MessageProps {
-  id: string
-  content: string
-  time: string
-  author: {
-    avatar?: string
-    name: string
-  }
-}
-
-export const MessageProps = ({ content, time, author }: MessageProps) => {
+export const Message = ({ content, time, author }: MessageProps) => {
   return (
     <Card
       className={styles.card}

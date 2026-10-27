@@ -1,15 +1,8 @@
 import type { ColumnsType } from 'antd/es/table'
 import { useMemo } from 'react'
 import { Link } from 'react-router-dom'
+import type { ThemeReacord } from '../types'
 import styles from './themes.module.css'
-
-export interface ThemeReacord {
-  id: string
-  title: string
-  author: string
-  lastMessage: string
-  answers: number
-}
 
 export const useColumns = () => {
   const columns = useMemo<ColumnsType<ThemeReacord>>(
