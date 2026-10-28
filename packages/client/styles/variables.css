@@ -4,6 +4,12 @@
   --button-bg-primary: #0087fe;
   --button-bg-accent: #7c5eff;
   --logo-color: #f8b800;
+  --white: #fff;
+  --black: #000;
+  --dark-overlay: rgb(0, 0, 0, 0.8);
+  --orange: #c86e28;
+  --accent-red: #be3926;
+  --accent-green: #99fe00;
 
   --text-shadow: #000;
   --text-light: #ffffff;
