@@ -3,6 +3,7 @@ import {
   ForumPage,
   forumSectionsLoader,
   forumThemesLoader,
+  themeMessagesLoader,
 } from './pages/ForumPage/ForumPage'
 import { Themes } from './pages/ForumPage/Themes/Themes'
 import { GamePage } from './pages/GamePage/GamePage'
@@ -65,7 +66,7 @@ export const routes = [
   {
     path: THEME_PAGE_PATH,
     Component: ForumContent,
-    loader: forumThemesLoader,
+    loader: themeMessagesLoader,
   },
   {
     path: NOT_FOUND_PAGE_PATH,

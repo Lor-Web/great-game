@@ -1,21 +1,28 @@
-import { Button, Form } from 'antd'
+import { Button, Form, message } from 'antd'
 import TextArea from 'antd/es/input/TextArea'
 import { useCallback } from 'react'
+import { useLoaderData } from 'react-router-dom'
+import { sendMessage } from '../../../api/forum.api'
 import { Message } from '../Message/Message'
-import { MessagesMock } from '../mocks'
 import type { MessageProps } from '../types'
 import styles from './forum-content.module.css'
 
-export const ForumContent = ({ messages }: { messages: MessageProps[] }) => {
-  messages = MessagesMock //todo get from store
+export const ForumContent = () => {
+  const messages = useLoaderData() as MessageProps[]
   const [form] = Form.useForm()
+  const [messageApi, contextHolder] = message.useMessage()
 
   const onSubmit = useCallback(
     (values: { message: string }) => {
-      console.log('Send message', values.message)
-      form.resetFields()
+      sendMessage(values.message)
+        .then(() => {
+          form.resetFields()
+        })
+        .catch(() => {
+          messageApi.warning('Не удалось отправить сообщение. Попробуйте еще')
+        })
     },
-    [form]
+    [form, messageApi.warning]
   )
 
   return (
@@ -36,6 +43,7 @@ export const ForumContent = ({ messages }: { messages: MessageProps[] }) => {
         <Button className={styles.button} htmlType="submit">
           Отправить
         </Button>
+        {contextHolder}
       </Form>
     </main>
   )

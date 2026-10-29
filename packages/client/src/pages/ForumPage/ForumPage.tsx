@@ -1,11 +1,12 @@
 import { Table } from 'antd'
+import { useLoaderData } from 'react-router-dom'
 import styles from './forum-page.module.css'
 import { useColumns } from './hooks'
-import { ThemesMock, Topics } from './mocks'
-import type { ForumPageProps } from './types'
+import { MessagesMock, ThemesMock, Topics } from './mocks'
+import type { ThemeReacord, TopicRecord } from './types'
 
-export const ForumPage = ({ topics }: ForumPageProps) => {
-  topics = Topics //todo get from store
+export const ForumPage = () => {
+  const topics = useLoaderData() as Array<TopicRecord>
   const columns = useColumns()
 
   return (
@@ -17,7 +18,6 @@ export const ForumPage = ({ topics }: ForumPageProps) => {
 }
 
 export async function forumSectionsLoader() {
-  console.log('get all forum sections')
   return Topics
 }
 
@@ -25,8 +25,9 @@ export async function forumThemesLoader({
   params,
 }: {
   params: { sectionId: string }
-}) {
-  console.log('get themes for section', params.sectionId)
+}): Promise<ThemeReacord[]> {
+  console.log(`get themes for section ${params.sectionId}`)
+
   return ThemesMock
 }
 
@@ -35,5 +36,7 @@ export async function themeMessagesLoader({
 }: {
   params: { themeId: string }
 }) {
-  console.log('get messages for theme', params.themeId)
+  console.log(`get messages for theme ${params.themeId}`)
+
+  return MessagesMock
 }

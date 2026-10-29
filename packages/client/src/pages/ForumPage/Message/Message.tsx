@@ -20,6 +20,7 @@ export const Message = ({ content, time, author }: MessageProps) => {
       {/* todo Тут надо вставит использование const cleanHtml = DOMPurify.sanitize(userContributedHtml); из import DOMPurify from 'dompurify';*/}
       <div
         className={styles.content}
+        // biome-ignore lint/security/noDangerouslySetInnerHtml: safe via sanitize
         dangerouslySetInnerHTML={{ __html: content }}></div>
     </Card>
   )

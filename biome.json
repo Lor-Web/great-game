@@ -27,7 +27,7 @@
     "rules": {
       "preset": "recommended",
       "security": {
-        "noDangerouslySetInnerHtml": "off"
+        "noDangerouslySetInnerHtml": "on"
       }
     }
   },
