@@ -9,7 +9,7 @@ export type GameInput = {
 export const createKeyboardControls = (canvas: HTMLCanvasElement) => {
   const keys = new Set<string>()
   const input: GameInput = { left: false, right: false, jumpPressed: false }
-  const gameKeys = Object.values(GameKey) as string[]
+  const gameKeys = Object.values(GameKey)
 
   const updateDirection = () => {
     input.left = keys.has(GameKey.Left) || keys.has(GameKey.ArrowLeft)
@@ -24,7 +24,7 @@ export const createKeyboardControls = (canvas: HTMLCanvasElement) => {
   }
 
   const onKeyDown = (event: KeyboardEvent) => {
-    if (!gameKeys.includes(event.code)) return
+    if (!gameKeys.includes(event.code as GameKey)) return
     event.preventDefault()
     // Удержание Space не запускает новый прыжок после приземления.
     if (
