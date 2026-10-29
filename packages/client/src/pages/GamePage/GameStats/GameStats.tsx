@@ -14,7 +14,7 @@ export const GameStats = ({
   timeLeft,
 }: GameStatsProps) => {
   return (
-    <header className={styles.gameStats}>
+    <div className={styles.gameStats}>
       <div>
         <span>SCORE</span>
         <span>{String(score).padStart(6, '0')}</span>
@@ -33,6 +33,6 @@ export const GameStats = ({
         <span>TIME</span>
         <span>{timeLeft}</span>
       </div>
-    </header>
+    </div>
   )
 }
