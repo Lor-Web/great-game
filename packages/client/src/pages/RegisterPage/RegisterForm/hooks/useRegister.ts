@@ -1,7 +1,7 @@
 import { Form, message } from 'antd'
 import { useEffect, useRef, useState } from 'react'
 import UserController from '../../../../api/Controllers/UserController'
-import type { SignUpRequest } from '../../../../api/Models/user-api'
+import { useAppDispatch } from '../../../../store/hooks'
 import { ErrorMessage } from '../../../../utils/ErrorMessage'
 
 export interface RegisterFields {
@@ -10,16 +10,19 @@ export interface RegisterFields {
   first_name: string
   second_name: string
   phone: string
-  password?: string
-  confirmPassword?: string
+  password: string
+  confirmPassword: string
   agreement: boolean
 }
 
 export const useRegister = () => {
+  const dispatch = useAppDispatch()
   const [messageApi, contextHolder] = message.useMessage()
   const [form] = Form.useForm<RegisterFields>()
   const [loading, setLoading] = useState<boolean>(false)
 
+  // Флаг для проверки, смонтирован ли компонент
+  const isMountedRef = useRef<boolean>(true)
   const abortControllerRef = useRef<AbortController | null>(null)
 
   //Убираем риски утечки памяти при переходе
@@ -32,6 +35,7 @@ export const useRegister = () => {
   }, [])
 
   const onFinish = async (values: RegisterFields) => {
+    if (loading) return
     setLoading(true)
 
     const controller = new AbortController()
@@ -44,14 +48,23 @@ export const useRegister = () => {
     } = values
 
     try {
-      await UserController.signup(signUpData as SignUpRequest)
+      await UserController.signup(signUpData, dispatch, controller.signal)
 
-      if (controller.signal.aborted) return
+      // если запрос завершился успехом, но пользователь ушел со страницы
+      if (!isMountedRef.current || controller.signal.aborted) {
+        console.warn(
+          'Пользователь ушел со страницы, но регистрация на сервере успешно завершена.'
+        )
+        return
+      }
 
       messageApi.success('Регистрация успешно завершена!')
       form.resetFields()
     } catch (error: unknown) {
-      if (controller.signal.aborted) return
+      if (!isMountedRef.current || controller.signal.aborted) {
+        console.warn('Запрос регистрации был отменен клиентом.')
+        return
+      }
 
       const errorMessage = ErrorMessage(
         error,
@@ -83,7 +96,7 @@ export const useRegister = () => {
       }
     } finally {
       // Защита от утечки памяти: обновляем стейт только если компонент еще живой
-      if (!controller.signal.aborted) {
+      if (isMountedRef.current && !controller.signal.aborted) {
         setLoading(false)
         abortControllerRef.current = null
       }

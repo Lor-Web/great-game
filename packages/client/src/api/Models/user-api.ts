@@ -1,7 +1,15 @@
 import { BaseAPI } from '../base-api'
+import {
+  type SignUpResponse,
+  SignUpResponseSchema,
+  type UserDTO,
+  UserDTOSchema,
+} from '../Schemas/user.schema'
 import HTTPTransport from '../services/HTTPTransport'
 
-const chatAPIInstance = new HTTPTransport()
+export type { UserDTO } from '../Schemas/user.schema'
+
+const httpTransport = new HTTPTransport()
 
 export interface SignInRequest extends Record<string, unknown> {
   login: string
@@ -17,17 +25,6 @@ export interface SignUpRequest extends Record<string, unknown> {
   phone: string
 }
 
-export interface UserDTO {
-  id: number
-  first_name: string
-  second_name: string
-  display_name: string
-  login: string
-  email: string
-  phone: string
-  avatar: string
-}
-
 export interface ProfileUpdateRequest extends Record<string, unknown> {
   first_name: string
   second_name: string
@@ -37,17 +34,6 @@ export interface ProfileUpdateRequest extends Record<string, unknown> {
   phone: string
 }
 
-export interface SearchUserDTO {
-  id: number
-  first_name: string
-  second_name: string
-  display_name: string | null
-  phone: string
-  login: string
-  avatar: string | null
-  email: string
-}
-
 export interface PasswordUpdateRequest extends Record<string, unknown> {
   oldPassword: string
   newPassword: string
@@ -55,32 +41,41 @@ export interface PasswordUpdateRequest extends Record<string, unknown> {
 
 class UserAPI extends BaseAPI {
   // Авторизация
-  signin(data: SignInRequest) {
-    return chatAPIInstance.post<void>('/auth/signin', { data })
+  signin(data: SignInRequest, signal?: AbortSignal) {
+    return httpTransport.post<void>('/auth/signin', { data, signal })
   }
 
   // Получение текущего пользователя (после авторизации)
-  getUser() {
-    return chatAPIInstance.get<UserDTO>('/auth/user')
+  getUser(signal?: AbortSignal) {
+    return httpTransport.get<UserDTO>('/auth/user', {
+      validate: data => UserDTOSchema.safeParse(data).success,
+      signal, // передаем сигнал в запрос
+    })
   }
 
   //Выход пользователя из приложения
   logout() {
-    return chatAPIInstance.post<void>('/auth/logout', {})
+    return httpTransport.post<void>('/auth/logout', {})
   }
 
-  create(data: SignUpRequest) {
-    return chatAPIInstance.post<{ id: number }>('/auth/signup', { data })
+  create(data: SignUpRequest, signal?: AbortSignal) {
+    return httpTransport.post<SignUpResponse>('/auth/signup', {
+      data,
+      signal,
+      validate: data => SignUpResponseSchema.safeParse(data).success,
+    })
   }
 
   request() {
-    return chatAPIInstance.get('/full')
+    return httpTransport.get('/full')
   }
 
   // Обновление данных пользователя
   update(data: ProfileUpdateRequest) {
-    // API Практикума принимает данные профиля по пути /user/profile
-    return chatAPIInstance.put<UserDTO>('/user/profile', { data })
+    return httpTransport.put<UserDTO>('/user/profile', {
+      data,
+      validate: data => UserDTOSchema.safeParse(data).success,
+    })
   }
 
   delete(): Promise<unknown> {

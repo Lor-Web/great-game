@@ -7,13 +7,21 @@ export enum METHODS {
   DELETE = 'DELETE',
 }
 
+//обзначаем типы которые мы можем безопасно сериализовать в query
+type QueryPrimitive = string | number | boolean
+type QueryParamValue = QueryPrimitive | QueryPrimitive[]
+export type QueryData = Record<string, QueryParamValue>
+
 type RequestOptions = {
   headers?: Record<string, string>
   method?: METHODS
-  data?: Record<string, unknown> | FormData | string | null
+  data?: QueryData | Record<string, unknown> | FormData | string | null
   timeout?: number
   responseType?: XMLHttpRequestResponseType
   withCredentials?: boolean
+  validate?: (data: unknown) => boolean
+  //Добавляем AbortSignal
+  signal?: AbortSignal
 }
 
 // Единый тип для http-методов,
@@ -22,41 +30,36 @@ type HTTPMethod = <R = unknown>(
   options?: Omit<RequestOptions, 'method'>
 ) => Promise<R>
 
-function queryStringify(data: Record<string, unknown>): string {
-  if (!data || typeof data !== 'object') {
-    throw new Error('Data must be a non-null object')
-  }
+function appendQueryParameters(urlObj: URL, data: QueryData): void {
+  Object.entries(data).forEach(([key, value]) => {
+    if (value === undefined || value === null) {
+      return
+    }
 
-  const keys = Object.keys(data)
-  if (keys.length === 0) {
-    return ''
-  }
-
-  return keys
-    .reduce<string[]>((acc, key) => {
-      const value = data[key]
-      if (value === undefined || value === null) {
-        return acc
-      }
-
-      const encodedKey = encodeURIComponent(key)
-      const encodedValue = encodeURIComponent(String(value))
-      acc.push(`${encodedKey}=${encodedValue}`)
-      return acc
-    }, [])
-    .join('&')
+    if (Array.isArray(value)) {
+      // Поддержка массивов
+      value.forEach(item => {
+        urlObj.searchParams.append(key, String(item))
+      })
+    } else if (typeof value === 'object') {
+      // Защита от вложенных объектов
+      throw new Error(
+        `Deeply nested objects are not supported in query string for key: ${key}`
+      )
+    } else {
+      urlObj.searchParams.append(key, String(value))
+    }
+  })
 }
 
 export class HTTPTransport {
   private readonly baseURL: string
   private readonly defaultTimeout = 5000
 
-  //Если baseURL не передан, по умолчанию берется глобальный BASE_URL из конфига
   constructor(baseURL: string = BASE_URL) {
     this.baseURL = baseURL
   }
 
-  // Используем тип HTTPMethod, удаляя дублирование типов аргументов.
   public get: HTTPMethod = (url, options = {}) =>
     this.request(url, { ...options, method: METHODS.GET }, options.timeout)
 
@@ -69,35 +72,60 @@ export class HTTPTransport {
   public delete: HTTPMethod = (url, options = {}) =>
     this.request(url, { ...options, method: METHODS.DELETE }, options.timeout)
 
-  // Основной метод запроса
   private request<T = unknown>(
     url: string,
     options: RequestOptions,
     timeout: number = this.defaultTimeout
   ): Promise<T> {
-    const fullURL = `${this.baseURL}${url}`
     const {
       headers = {},
       method,
       data,
       responseType,
       withCredentials = true,
+      validate,
+      signal,
     } = options
 
     if (!method) {
       return Promise.reject(new Error('HTTP method is required'))
     }
 
+    // Формируем адрес через нативный класс URL
+    const parsedURL = new URL(url, this.baseURL)
+    const isGet = method === METHODS.GET
+
+    // Если это GET-запрос и переданы параметры, безопасно добавляем их в URL
+    if (
+      isGet &&
+      data &&
+      typeof data === 'object' &&
+      !(data instanceof FormData)
+    ) {
+      try {
+        appendQueryParameters(parsedURL, data as QueryData)
+      } catch (error) {
+        return Promise.reject(error)
+      }
+    }
+
     return new Promise<T>((resolve, reject) => {
       const xhr = new XMLHttpRequest()
-      const isGet = method === METHODS.GET
 
-      const finalUrl =
-        isGet && data && typeof data === 'object' && !(data instanceof FormData)
-          ? `${fullURL}?${queryStringify(data)}`
-          : fullURL
+      // finalUrl теперь всегда валиден, даже если в url изначально были свои `?param=1`
+      xhr.open(method, parsedURL.toString())
 
-      xhr.open(method, finalUrl)
+      // отслеживаем сигнал, если он отменён прерываемся
+      if (signal?.aborted) {
+        return reject({ reason: 'Request aborted', request: xhr })
+      }
+
+      // Слушаем событие отмены из хука
+      if (signal) {
+        signal.addEventListener('abort', () => {
+          xhr.abort() // отменяем сетевой запрос в браузере!
+        })
+      }
 
       xhr.withCredentials = withCredentials
 
@@ -120,12 +148,31 @@ export class HTTPTransport {
             if (contentType.includes('application/json')) {
               try {
                 response = JSON.parse(xhr.responseText)
-              } catch {
-                response = xhr.responseText
+              } catch (parseError) {
+                // Если сервер задекларировал JSON, но прислал битый текст выдаём ошибку
+                reject({
+                  status: xhr.status,
+                  reason: 'Deserialization Error: Invalid JSON response',
+                  error: parseError,
+                  responseText: xhr.responseText,
+                  request: xhr,
+                })
+                return
               }
             } else {
               response = xhr.responseText
             }
+          }
+
+          // проверка структуры переданным валидатором
+          if (validate && !validate(response)) {
+            reject({
+              status: xhr.status,
+              reason: 'Validation Error: Response schema mismatch',
+              response,
+              request: xhr,
+            })
+            return
           }
 
           resolve(response as T)

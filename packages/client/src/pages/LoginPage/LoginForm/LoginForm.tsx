@@ -1,5 +1,5 @@
 import { LockOutlined, UserOutlined } from '@ant-design/icons'
-import { Button, Checkbox, Form, Input } from 'antd'
+import { Button, Form } from 'antd'
 import type React from 'react'
 import { FormInput } from '../../components/AuthFields/FormInput'
 import { antdCustomValidator } from '../../validation/antdCustomValidator'
@@ -14,7 +14,6 @@ const LoginForm: React.FC = () => {
       <Form
         form={form}
         name="login_spa_form"
-        initialValues={{ remember: true }}
         onFinish={onFinish}
         layout="vertical"
         size="large">
@@ -37,10 +36,6 @@ const LoginForm: React.FC = () => {
           isPassword
           rules={[{ required: true, message: 'Введите пароль' }]}
         />
-
-        <Form.Item name="remember" valuePropName="checked">
-          <Checkbox>Запомнить меня</Checkbox>
-        </Form.Item>
 
         <Button type="primary" htmlType="submit" block loading={loading}>
           Войти в аккаунт

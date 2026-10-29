@@ -1,16 +1,16 @@
 import { Form, message } from 'antd'
 import { useEffect, useRef, useState } from 'react'
 import UserController from '../../../../api/Controllers/UserController'
-import type { SignInRequest } from '../../../../api/Models/user-api'
+import { useAppDispatch } from '../../../../store/hooks'
 import { ErrorMessage } from '../../../../utils/ErrorMessage'
 
 export interface LoginFields {
   login: string
-  password?: string
-  remember?: boolean
+  password: string
 }
 
 export const useLogin = () => {
+  const dispatch = useAppDispatch()
   const [messageApi, contextHolder] = message.useMessage()
   const [form] = Form.useForm<LoginFields>()
   const [loading, setLoading] = useState<boolean>(false)
@@ -27,17 +27,19 @@ export const useLogin = () => {
   }, [])
 
   const onFinish = async (values: LoginFields) => {
+    // блокируем повторную отправку, пока идет предыдущий запрос
+    if (loading) return
     setLoading(true)
 
     // Создаем новый контроллер для текущего запроса
     const controller = new AbortController()
     abortControllerRef.current = controller
 
-    const { remember: _remember, ...signInData } = values
+    const { ...signInData } = values
 
     try {
       // Вызываем метод авторизации контроллера
-      await UserController.signin(signInData as SignInRequest)
+      await UserController.signin(signInData, dispatch, controller.signal)
 
       // Проверяем актуальность компонента (не ушел ли юзер со страницы, пока шел запрос)
       if (controller.signal.aborted) return
