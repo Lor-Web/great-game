@@ -1,29 +1,57 @@
 import { useEffect, useState } from 'react'
+import { GAME_DURATION_SECONDS } from './constants'
 import { GameStart } from './GameStart/GameStart'
 import { GameStats } from './GameStats/GameStats'
 import styles from './game-page.module.css'
 
 export const GamePage = () => {
-  const [isPlaying, setIsPlaying] = useState(false)
-  const [timeLeft, setTimeLeft] = useState(120)
+  type GameStatus = 'ready' | 'playing' | 'finished'
+
+  const [gameStatus, setGameStatus] = useState<GameStatus>('ready')
+  const [timeLeft, setTimeLeft] = useState(GAME_DURATION_SECONDS)
+  const [gameStats, setGameStats] = useState({
+    score: 0,
+    lives: 3,
+    world: 1,
+  })
+
+  // Для обновления статистики после добавления игровой логики
+  void setGameStats
 
   useEffect(() => {
-    if (!isPlaying || timeLeft === 0) {
+    if (gameStatus !== 'playing') {
       return
     }
 
-    const timer = setTimeout(() => {
-      setTimeLeft(prev => prev - 1)
+    const endTime = Date.now() + GAME_DURATION_SECONDS * 1000
+
+    const timer = setInterval(() => {
+      const remainingSeconds = Math.max(
+        0,
+        Math.ceil((endTime - Date.now()) / 1000)
+      )
+      setTimeLeft(remainingSeconds)
+
+      if (remainingSeconds === 0) {
+        setGameStatus('finished')
+      }
     }, 1000)
 
-    return () => clearTimeout(timer)
-  }, [isPlaying, timeLeft])
+    return () => clearInterval(timer)
+  }, [gameStatus])
 
   return (
     <main className={styles.gamePage}>
-      <GameStats score={0} lives={3} world="1-1" timeLeft={timeLeft} />
+      <GameStats
+        score={gameStats.score}
+        lives={gameStats.lives}
+        world={gameStats.world}
+        timeLeft={timeLeft}
+      />
 
-      {!isPlaying && <GameStart onStart={() => setIsPlaying(true)} />}
+      {gameStatus === 'ready' && (
+        <GameStart onStart={() => setGameStatus('playing')} />
+      )}
     </main>
   )
 }

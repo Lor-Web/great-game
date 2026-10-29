@@ -3,7 +3,7 @@ import styles from './game-stats.module.css'
 type GameStatsProps = {
   score: number
   lives: number
-  world: string
+  world: number
   timeLeft: number
 }
 
@@ -21,7 +21,9 @@ export const GameStats = ({
       </div>
       <div>
         <span>LIVES</span>
-        <span>{'♥ '.repeat(lives)}</span>
+        <span aria-label={`Осталось жизней: ${lives}`} role="img">
+          <span aria-hidden="true">{'♥ '.repeat(lives)}</span>
+        </span>
       </div>
       <div>
         <span>WORLD</span>
