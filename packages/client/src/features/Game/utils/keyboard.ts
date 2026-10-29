@@ -43,13 +43,10 @@ export const createKeyboardControls = (canvas: HTMLCanvasElement) => {
     updateDirection()
   }
 
-  const focusCanvas = () => canvas.focus({ preventScroll: true })
   canvas.addEventListener('keydown', onKeyDown)
   window.addEventListener('keyup', onKeyUp)
   canvas.addEventListener('blur', reset)
   window.addEventListener('blur', reset)
-  canvas.addEventListener('pointerdown', focusCanvas)
-  focusCanvas()
 
   return {
     input,
@@ -60,7 +57,6 @@ export const createKeyboardControls = (canvas: HTMLCanvasElement) => {
       window.removeEventListener('keyup', onKeyUp)
       canvas.removeEventListener('blur', reset)
       window.removeEventListener('blur', reset)
-      canvas.removeEventListener('pointerdown', focusCanvas)
     },
   }
 }
