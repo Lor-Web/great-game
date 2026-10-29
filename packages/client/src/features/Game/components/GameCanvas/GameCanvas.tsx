@@ -11,7 +11,7 @@ const GameCanvas = () => {
       width={GAME_WIDTH}
       height={GAME_HEIGHT}
       tabIndex={0}
-      aria-label="Прототип платформера. A/D или стрелки — движение, Space — прыжок.">
+      aria-label="Игровое поле игры">
       Для отображения игры необходим браузер с поддержкой Canvas 2D.
     </canvas>
   )
