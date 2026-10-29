@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import Game from '../../features/Game/Game'
 import { GAME_DURATION_SECONDS } from './constants'
 import { GameStart } from './GameStart/GameStart'
 import { GameStats } from './GameStats/GameStats'
@@ -49,9 +50,13 @@ export const GamePage = () => {
         timeLeft={timeLeft}
       />
 
+      <Game />
+
       {gameStatus === 'ready' && (
         <GameStart onStart={() => setGameStatus('playing')} />
       )}
     </main>
   )
 }
+
+export default GamePage

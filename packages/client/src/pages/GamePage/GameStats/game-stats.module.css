@@ -1,14 +1,17 @@
 .gameStats {
-  position: relative;
+  position: absolute;
+  top: 24px;
+  left: 50%;
+  transform: translateX(-50%);
   z-index: 1;
+
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: 24px;
+  width: calc(100% - 80px);
+  max-width: 1400px;
   color: var(--text-light);
   text-align: center;
-  width: 100%;
-  max-width: 1400px;
-  margin-inline: auto;
 }
 
 .gameStats > div {

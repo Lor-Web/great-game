@@ -25,7 +25,7 @@
 .startButton {
   padding: 20px 48px;
   border-radius: 8px;
-  background-color: var(--button-bg-accent);
+  background-color: var(--bg-blue-color);
   color: var(--text-light);
   font: inherit;
   font-size: 20px;
@@ -62,7 +62,7 @@
   max-width: 280px;
   margin: 12px 0 0;
   padding: 12px 16px;
-  background-color: var(--button-bg-accent);
+  background-color: var(--bg-blue-color);
   border: 2px solid var(--text-light);
   border-radius: 6px;
   color: var(--text-light);
