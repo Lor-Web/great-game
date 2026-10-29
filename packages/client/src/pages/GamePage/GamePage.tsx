@@ -1,3 +1,7 @@
-export const GamePage = () => {
-  return <h1>GamePage</h1>
+import Game from '../../features/Game/Game'
+
+const GamePage = () => {
+  return <Game />
 }
+
+export default GamePage
