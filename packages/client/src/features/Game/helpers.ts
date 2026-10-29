@@ -181,23 +181,4 @@ export const drawPreview = ({
       y: PREVIEW_SCENE.coin.y,
     })
   }
-
-  context.fillStyle = PREVIEW_STYLE.hudBackground
-  context.fillRect(
-    PREVIEW_HUD.x,
-    PREVIEW_HUD.y,
-    PREVIEW_HUD.width,
-    PREVIEW_HUD.height
-  )
-  context.fillStyle = PREVIEW_STYLE.text
-  context.font = PREVIEW_STYLE.titleFont
-  context.fillText(PREVIEW_HUD.title, PREVIEW_HUD.textX, PREVIEW_HUD.titleY)
-  context.font = PREVIEW_STYLE.messageFont
-  let message = PREVIEW_HUD.loading
-  if (failed) {
-    message = PREVIEW_HUD.error
-  } else if (images) {
-    message = PREVIEW_HUD.controls
-  }
-  context.fillText(message, PREVIEW_HUD.textX, PREVIEW_HUD.messageY)
 }
