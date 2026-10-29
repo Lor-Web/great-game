@@ -6,7 +6,7 @@ import {
   themeMessagesLoader,
 } from './pages/ForumPage/ForumPage'
 import { Themes } from './pages/ForumPage/Themes/Themes'
-import { GamePage } from './pages/GamePage/GamePage'
+import GamePage from './pages/GamePage/GamePage'
 import { LeaderBoardPage } from './pages/LeaderBoardPage/LeaderBoardPage'
 import { LoginPage } from './pages/LoginPage/LoginPage'
 import { MainPage } from './pages/MainPage/MainPage'
