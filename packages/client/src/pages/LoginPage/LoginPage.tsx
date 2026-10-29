@@ -30,7 +30,7 @@ export const LoginPage: React.FC = () => {
 
         <div className={styles.authFooter}>
           <Text type="secondary">Нет аккаунта? </Text>
-          <Link to="/register" className={styles.authLink}>
+          <Link to="/sign-up" className={styles.authLink}>
             Зарегистрироваться
           </Link>
         </div>
