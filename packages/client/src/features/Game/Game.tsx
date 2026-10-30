@@ -2,9 +2,9 @@ import GameCanvas from './components/GameCanvas/GameCanvas'
 import styles from './game.module.css'
 
 const Game = () => (
-  <main className={styles.game}>
+  <div className={styles.game}>
     <GameCanvas />
-  </main>
+  </div>
 )
 
 export default Game
