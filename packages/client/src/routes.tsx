@@ -1,3 +1,5 @@
+// Прослойка для отслеживания статуса пользователя, когда заработает в него нужно будет обернуть недоступные для авторизованных пользователей страницы
+//import { ProtectedLayout } from './protectedLayout/protectedLayout'
 import GamePage from './pages/GamePage/GamePage'
 import { LeaderBoardPage } from './pages/LeaderBoardPage/LeaderBoardPage'
 import { LoginPage } from './pages/LoginPage/LoginPage'
