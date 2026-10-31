@@ -1,3 +1,5 @@
+// Прослойка для отслеживания статуса пользователя, когда заработает в него нужно будет обернуть недоступные для авторизованных пользователей страницы
+//import { ProtectedLayout } from './protectedLayout/protectedLayout'
 import { ForumContent } from './pages/ForumPage/ForumContent/ForumContent'
 import {
   ForumPage,
