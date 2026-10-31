@@ -1,0 +1,72 @@
+.background {
+  background: var(--bg-blue-color);
+  font-family: "Press Start 2P", cursive;
+  color: var(--logo-color);
+  overflow: hidden;
+  width: 100vw;
+  min-height: 100vh;
+  background-image: url("../../../public/main-bg.png");
+  background-position-y: bottom;
+  background-repeat: repeat-x;
+}
+
+.title {
+  font-size: 24px;
+  padding: 56px;
+  margin: 0 0 30px 0;
+  text-shadow: 4px 4px var(--text-shadow);
+  text-align: center;
+  background: var(--bg-transparent-substrate);
+  border-bottom: 4px solid var(--black);
+}
+
+.table {
+  width: 100%;
+  max-width: 900px;
+  margin: 0 auto;
+  background: var(--dark-overlay);
+  border: 1px solid var(--orange);
+  color: var(--white);
+}
+
+.row {
+  display: grid;
+  grid-template-columns: 0.7fr 0.8fr 2fr 1fr;
+  align-items: center;
+  gap: 16px;
+  padding: 16px;
+  border-bottom: 1px solid var(--bg-blue-color);
+}
+
+.header {
+  font-weight: bold;
+  border-bottom: 2px solid var(--white);
+  background: var(--logo-color);
+  color: var(--accent-red);
+}
+
+.avatar {
+  width: 60px;
+  height: 60px;
+  background: var(--white);
+  color: var(--bg-blue-color);
+  border: 3px solid var(--logo-color);
+  font-size: 24px;
+  font-weight: 500;
+}
+
+.nickname {
+  color: var(--accent-green);
+}
+
+.firstScore {
+  color: var(--logo-color);
+}
+
+.topScore {
+  color: var(--accent-red);
+}
+
+.score {
+  color: var(--white);
+}
