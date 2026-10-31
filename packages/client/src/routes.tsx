@@ -4,21 +4,26 @@ import GamePage from './pages/GamePage/GamePage'
 import { LeaderBoardPage } from './pages/LeaderBoardPage/LeaderBoardPage'
 import { LoginPage } from './pages/LoginPage/LoginPage'
 import { MainPage } from './pages/MainPage/MainPage'
-/* 
-Код ниже необходимо раскомментить при мердже ветки "5.10 Верстка страницы форума"
+
+import { ForumContent } from './pages/ForumPage/ForumContent/ForumContent'
 import {
   ForumPage,
   forumSectionsLoader,
   forumThemesLoader,
+  themeMessagesLoader,
 } from './pages/ForumPage/ForumPage'
-import { ForumContent } from './pages/ForumPage/ForumContent/ForumContent'
 import { Themes } from './pages/ForumPage/Themes/Themes'
-*/
+import GamePage from './pages/GamePage/GamePage'
+import { LeaderBoardPage } from './pages/LeaderBoardPage/LeaderBoardPage'
+import { LoginPage } from './pages/LoginPage/LoginPage'
+import { MainPage } from './pages/MainPage/MainPage'
 import { NotFoundPage } from './pages/NotFoundPage/NotFoundPage'
 import { ProfilePage } from './pages/ProfilePage/ProfilePage'
 import { RegisterPage } from './pages/RegisterPage/RegisterPage'
 import { ServerErrorPage } from './pages/ServerErrorPage/ServerErrorPage'
 import {
+  FORUM_PAGE_PATH,
+  FORUM_SECTION_PAGE_PATH,
   GAME_PAGE_PATH,
   LEADERBOARD_PAGE_PATH,
   LOGIN_PAGE_PATH,
@@ -27,6 +32,7 @@ import {
   PROFILE_PAGE_PATH,
   REGISTER_PAGE_PATH,
   SERVER_ERROR_PAGE_PATH,
+  THEME_PAGE_PATH,
 } from './shared/constants/routes.constant'
 
 export const routes = [
@@ -54,8 +60,6 @@ export const routes = [
     path: LEADERBOARD_PAGE_PATH,
     Component: LeaderBoardPage,
   },
-  /* 
-Код ниже необходимо раскомментить при мердже ветки "5.10 Верстка страницы форума"
   {
     path: FORUM_PAGE_PATH,
     Component: ForumPage,
@@ -69,9 +73,8 @@ export const routes = [
   {
     path: THEME_PAGE_PATH,
     Component: ForumContent,
-    loader: forumThemesLoader,
+    loader: themeMessagesLoader,
   },
-  */
   {
     path: NOT_FOUND_PAGE_PATH,
     Component: NotFoundPage,
