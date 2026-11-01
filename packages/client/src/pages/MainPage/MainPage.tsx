@@ -1,4 +1,10 @@
 import { Link } from 'react-router-dom'
+import {
+  FORUM_PAGE_PATH,
+  GAME_PAGE_PATH,
+  LEADERBOARD_PAGE_PATH,
+  PROFILE_PAGE_PATH,
+} from '../../shared/constants/routes.constant'
 
 import styles from './main-page.module.css'
 
@@ -16,7 +22,7 @@ export const MainPage = () => {
         </nav>
       </div>
       <main className={styles.body}>
-        <Link to="/game" className={styles.startLink}>
+        <Link to={GAME_PAGE_PATH} className={styles.startLink}>
           START GAME
         </Link>
         <div className={styles.description}>
@@ -34,15 +40,15 @@ export const MainPage = () => {
 
 const NavigationItems = [
   {
-    to: '/leaderbord',
+    to: LEADERBOARD_PAGE_PATH,
     text: 'ЛИДЕРБОРД',
   },
   {
-    to: '/forum',
+    to: FORUM_PAGE_PATH,
     text: 'ФОРУМ',
   },
   {
-    to: '/profile',
+    to: PROFILE_PAGE_PATH,
     text: 'ПРОФИЛЬ [?]',
   },
 ]
