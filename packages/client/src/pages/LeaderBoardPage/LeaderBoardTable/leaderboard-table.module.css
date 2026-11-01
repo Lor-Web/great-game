@@ -32,6 +32,10 @@
   border-bottom: 1px solid var(--bg-blue-color);
 }
 
+.table :global(.ant-table-tbody > tr:last-child > td) {
+  border-bottom: none !important;
+}
+
 .table :global(.ant-table-thead > tr > th:first-child),
 .table :global(.ant-table-thead > tr > th:last-child) {
   border-radius: 0 !important;
