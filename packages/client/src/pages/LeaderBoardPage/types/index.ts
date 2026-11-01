@@ -4,3 +4,7 @@ export interface LeaderboardRecord {
   score: number
   avatar?: string
 }
+
+export interface LeaderBoardTableProps {
+  players: LeaderboardRecord[]
+}

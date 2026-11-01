@@ -1,0 +1,92 @@
+.table {
+  width: 100%;
+  max-width: 900px;
+  margin: 0 auto;
+  background: var(--dark-overlay);
+  border: 1px solid var(--orange);
+}
+
+.table :global(.ant-table) {
+  background: transparent;
+  color: var(--white);
+  font-family: "Press Start 2P", cursive;
+}
+
+.table :global(.ant-table-thead > tr > th) {
+  background: var(--logo-color);
+  color: var(--accent-red);
+  font-family: "Press Start 2P", cursive;
+  border-radius: 0 !important;
+  border-right: none !important;
+  border-bottom: 2px solid var(--white);
+}
+
+.table :global(.ant-table-thead > tr > th::before) {
+  display: none !important;
+}
+
+.table :global(.ant-table-tbody > tr > td) {
+  background: var(--dark-overlay);
+  color: var(--white);
+  border-right: none !important;
+  border-bottom: 1px solid var(--bg-blue-color);
+}
+
+.table :global(.ant-table-thead > tr > th:first-child),
+.table :global(.ant-table-thead > tr > th:last-child) {
+  border-radius: 0 !important;
+}
+
+.table :global(.ant-table-tbody > tr:hover > td) {
+  background: var(--dark-overlay) !important;
+}
+
+.avatar {
+  width: 60px;
+  height: 60px;
+  background: var(--white);
+  color: var(--bg-blue-color);
+  border: 3px solid var(--logo-color);
+  font-size: 24px;
+  font-weight: 500;
+}
+
+.nickname {
+  color: var(--accent-green);
+}
+
+.firstScore {
+  color: var(--logo-color);
+}
+
+.topScore {
+  color: var(--accent-red);
+}
+
+.score {
+  color: var(--white);
+}
+
+@media (max-width: 480px) {
+  .table {
+    width: calc(100% - 24px);
+    margin: 0 auto;
+  }
+
+  .table :global(.ant-table) {
+    font-size: 10px;
+  }
+
+  .table :global(.ant-table-thead > tr > th),
+  .table :global(.ant-table-tbody > tr > td) {
+    padding: 8px 4px;
+    font-size: 10px;
+    white-space: nowrap;
+  }
+
+  .avatar {
+    width: 36px;
+    height: 36px;
+    font-size: 16px;
+  }
+}
