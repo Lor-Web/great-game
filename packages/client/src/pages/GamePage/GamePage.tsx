@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import Game from '../../features/Game/Game'
 import { GAME_DURATION_SECONDS } from './constants'
+import { GameOver } from './GameOver/GameOver'
 import { GameStart } from './GameStart/GameStart'
 import { GameStats } from './GameStats/GameStats'
 import styles from './game-page.module.css'
@@ -16,9 +17,6 @@ export const GamePage = () => {
     world: 1,
   })
 
-  // Для обновления статистики после добавления игровой логики
-  void setGameStats
-
   useEffect(() => {
     if (gameStatus !== 'playing') {
       return
@@ -32,14 +30,26 @@ export const GamePage = () => {
         Math.ceil((endTime - Date.now()) / 1000)
       )
       setTimeLeft(remainingSeconds)
-
-      if (remainingSeconds === 0) {
-        setGameStatus('finished')
-      }
     }, 1000)
 
     return () => clearInterval(timer)
   }, [gameStatus])
+
+  useEffect(() => {
+    if (gameStatus === 'playing' && (timeLeft === 0 || gameStats.lives <= 0)) {
+      setGameStatus('finished')
+    }
+  }, [gameStatus, timeLeft, gameStats.lives])
+
+  const handleRetry = () => {
+    setTimeLeft(GAME_DURATION_SECONDS)
+    setGameStats({
+      score: 0,
+      lives: 3,
+      world: 1,
+    })
+    setGameStatus('ready')
+  }
 
   return (
     <main className={styles.gamePage}>
@@ -55,6 +65,8 @@ export const GamePage = () => {
       {gameStatus === 'ready' && (
         <GameStart onStart={() => setGameStatus('playing')} />
       )}
+
+      {gameStatus === 'finished' && <GameOver onRetry={handleRetry} />}
     </main>
   )
 }

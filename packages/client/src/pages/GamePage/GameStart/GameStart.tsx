@@ -1,5 +1,7 @@
 import { Button } from 'antd'
 import { useEffect, useState } from 'react'
+import { GameScreen } from '../components/GameScreen/GameScreen'
+import screenStyles from '../components/GameScreen/game-screen.module.css'
 import { COUNTDOWN_SECONDS, GO_DISPLAY_MS } from '../constants'
 import styles from './game-start.module.css'
 
@@ -53,23 +55,21 @@ export const GameStart = ({ onStart }: GameStartProps) => {
         </div>
       )}
 
-      <div className={styles.overlay}>
-        <div className={styles.startContent}>
-          {isCountdown ? (
-            <h1>{showGo ? 'GO!' : countdown}</h1>
-          ) : (
-            <>
-              <h1>READY?</h1>
-              <Button
-                type="primary"
-                className={styles.startButton}
-                onClick={() => setIsCountdown(true)}>
-                START
-              </Button>
-            </>
-          )}
-        </div>
-      </div>
+      <GameScreen>
+        {isCountdown ? (
+          <h1>{showGo ? 'GO!' : countdown}</h1>
+        ) : (
+          <>
+            <h1>READY?</h1>
+            <Button
+              type="primary"
+              className={screenStyles.button}
+              onClick={() => setIsCountdown(true)}>
+              START
+            </Button>
+          </>
+        )}
+      </GameScreen>
     </>
   )
 }
