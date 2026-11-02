@@ -1,6 +1,8 @@
 import type { AppDispatch } from '../../store'
-import { setUser } from '../../store/userSlice'
+import { clearUser, setUser } from '../../store/userSlice'
 import UserAPI, {
+  type PasswordUpdateRequest,
+  type ProfileUpdateRequest,
   type SignInRequest,
   type SignUpRequest,
   type UserDTO,
@@ -24,7 +26,7 @@ class UserController {
     dispatch: AppDispatch,
     signal?: AbortSignal
   ): Promise<UserDTO | null> {
-    return UserAPI.getUser()
+    return UserAPI.getUser(signal)
       .then((data: UserDTO) => {
         dispatch(setUser(data))
         return data
@@ -60,6 +62,58 @@ class UserController {
     } catch (error) {
       if (signal?.aborted) return null
       console.error('signup error:', error)
+      throw error
+    }
+  }
+
+  // Смена пароля
+  public async updatePassword(data: PasswordUpdateRequest) {
+    try {
+      await UserAPI.updatePassword(data)
+    } catch (error) {
+      console.error('updatePassword error:', error)
+      throw error
+    }
+  }
+
+  // Обновление аватара
+  public async updateAvatar(data: FormData, dispatch: AppDispatch) {
+    try {
+      const user = await UserAPI.updateAvatar(data)
+
+      dispatch(setUser(user))
+
+      return user
+    } catch (error) {
+      console.error('updateAvatar error:', error)
+      throw error
+    }
+  }
+
+  //Выход их профиля
+  public async logout(dispatch: AppDispatch) {
+    try {
+      await UserAPI.logout()
+      dispatch(clearUser())
+    } catch (error) {
+      console.error('logout error:', error)
+      throw error
+    }
+  }
+
+  // Обновление данных пользователя
+  public async updateProfile(
+    data: ProfileUpdateRequest,
+    dispatch: AppDispatch
+  ) {
+    try {
+      const user = await UserAPI.update(data)
+
+      dispatch(setUser(user))
+
+      return user
+    } catch (error) {
+      console.error('updateProfile error:', error)
       throw error
     }
   }

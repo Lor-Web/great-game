@@ -1,9 +1,10 @@
 import { Form, message } from 'antd'
 import { useEffect, useRef, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import UserController from '../../../../api/Controllers/UserController'
+import { MAIN_PAGE_PATH } from '../../../../shared/constants/routes.constant'
 import { useAppDispatch } from '../../../../store/hooks'
 import { ErrorMessage } from '../../../../utils/ErrorMessage'
-
 export interface LoginFields {
   login: string
   password: string
@@ -11,6 +12,7 @@ export interface LoginFields {
 
 export const useLogin = () => {
   const dispatch = useAppDispatch()
+  const navigate = useNavigate()
   const [messageApi, contextHolder] = message.useMessage()
   const [form] = Form.useForm<LoginFields>()
   const [loading, setLoading] = useState<boolean>(false)
@@ -39,13 +41,22 @@ export const useLogin = () => {
 
     try {
       // Вызываем метод авторизации контроллера
-      await UserController.signin(signInData, dispatch, controller.signal)
+      const user = await UserController.signin(
+        signInData,
+        dispatch,
+        controller.signal
+      )
 
       // Проверяем актуальность компонента (не ушел ли юзер со страницы, пока шел запрос)
       if (controller.signal.aborted) return
 
+      if (!user) {
+        throw new Error('Не удалось получить данные пользователя')
+      }
+
       messageApi.success('Вход выполнен успешно!')
       form.resetFields()
+      navigate(MAIN_PAGE_PATH, { replace: true })
     } catch (error: unknown) {
       if (controller.signal.aborted) {
         // Запрос был отменен легитимно, обновлять не нужно

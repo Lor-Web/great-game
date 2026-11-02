@@ -92,7 +92,11 @@ export class HTTPTransport {
     }
 
     // Формируем адрес через нативный класс URL
-    const parsedURL = new URL(url, this.baseURL)
+    // const parsedURL = new URL(url, this.baseURL) пришлось заменить иначе не подтягивалась аватарка
+    const normalizedBaseURL = `${this.baseURL.replace(/\/+$/, '')}/`
+    const normalizedPath = url.replace(/^\/+/, '')
+    const parsedURL = new URL(normalizedPath, normalizedBaseURL)
+
     const isGet = method === METHODS.GET
 
     // Если это GET-запрос и переданы параметры, безопасно добавляем их в URL
