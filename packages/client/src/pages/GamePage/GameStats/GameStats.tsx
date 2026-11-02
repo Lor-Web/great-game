@@ -1,18 +1,16 @@
+import { useSelector } from 'react-redux'
+import type { RootState } from '../../../store'
 import styles from './game-stats.module.css'
 
 type GameStatsProps = {
-  score: number
   lives: number
   world: number
   timeLeft: number
 }
 
-export const GameStats = ({
-  score,
-  lives,
-  world,
-  timeLeft,
-}: GameStatsProps) => {
+export const GameStats = ({ lives, world, timeLeft }: GameStatsProps) => {
+  const score = useSelector((store: RootState) => store.game.score)
+
   return (
     <div className={styles.gameStats}>
       <div>

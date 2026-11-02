@@ -4,6 +4,7 @@ export const SPRITE_SCALE = 2
 export const TILE_SOURCE_SIZE = 16
 export const TILE_SIZE = TILE_SOURCE_SIZE * SPRITE_SCALE
 export const GROUND_Y = 296
+export const ATTACK_DURATION = 0.5
 
 export const PLAYER_CONFIG = {
   startX: 100,
@@ -14,6 +15,20 @@ export const PLAYER_CONFIG = {
   jumpSpeed: 400,
   halfWidth: 12,
   spriteBottomOffset: 8,
+}
+
+export const GAME_OBJECT_CONFIG = {
+  excaliburGap: 12,
+  attackMaxDistance: 30,
+  coordinatesGap: 10,
+  healthBar: {
+    width: 32,
+    height: 4,
+    upGap: 35,
+    maxColor: '#4ade80',
+    middleColor: '#facc15',
+    minColor: '#ef4444',
+  },
 }
 
 export const LOOP_CONFIG = {
@@ -38,10 +53,13 @@ export const PREVIEW_SCENE = {
   ],
   platform: { x: 256, y: 216, width: 128 },
   slimes: [
-    { x: 448, y: GROUND_Y, facingLeft: false },
-    { x: 528, y: GROUND_Y, facingLeft: true },
+    { x: 448, y: GROUND_Y, facingLeft: false, value: 2 },
+    { x: 528, y: GROUND_Y, facingLeft: true, value: 2 },
   ],
-  coin: { x: 320, y: 200 },
+  coins: [
+    { x: 320, y: 210 },
+    { x: 180, y: 290 },
+  ],
   cloud: {
     travelWidth: 80,
     speed: 12,
@@ -75,5 +93,5 @@ export const PREVIEW_HUD = {
   title: 'GREAT GAME / DEV',
   loading: 'Загрузка графики…',
   error: 'Не удалось загрузить графику. Обновите страницу.',
-  controls: 'A/D или ←/→ — движение · Space — прыжок',
+  controls: 'A/D или ←/→ — движение · Space — прыжок · Q - атака',
 }

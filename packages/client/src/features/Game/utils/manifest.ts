@@ -5,6 +5,7 @@ export const spriteFiles = {
   [SpriteId.Knight]: 'knight.png',
   [SpriteId.Slime]: 'slime_green.png',
   [SpriteId.Coin]: 'coin.png',
+  [SpriteId.Excalibur]: 'excalibur.png',
 }
 
 export type GameImages = Record<SpriteId, HTMLImageElement>
@@ -34,6 +35,15 @@ export const animations = {
     frameWidth: 32,
     frameHeight: 32,
     row: 0,
+    frameCount: 4,
+    fps: 6,
+    loop: true,
+  },
+  excalibur: {
+    sprite: SpriteId.Excalibur,
+    frameWidth: 32,
+    frameHeight: 32,
+    row: 1,
     frameCount: 4,
     fps: 6,
     loop: true,

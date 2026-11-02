@@ -1,5 +1,19 @@
-import { GAME_WIDTH, GROUND_Y, PLAYER_CONFIG } from '../constants'
+import type { AppDispatch } from '../../../store'
+import { incrementScore } from '../../../store/gameSlice'
+import {
+  ATTACK_DURATION,
+  GAME_WIDTH,
+  GROUND_Y,
+  PLAYER_CONFIG,
+  PREVIEW_SCENE,
+} from '../constants'
 import { PlayerAnimation } from '../enums'
+import {
+  checkIfPlayerInFrontOfObject,
+  checkIfPlayerOverPlatform,
+  checkIfTheSameCoordinates,
+  type GameObject,
+} from '../helpers'
 import type { GameInput } from './keyboard'
 
 export type Player = {
@@ -11,6 +25,8 @@ export type Player = {
   facingLeft: boolean
   animation: PlayerAnimation
   animationTime: number
+  isAttacking: boolean
+  attackAnimationTime: number
 }
 
 export const createPlayer = (): Player => ({
@@ -22,22 +38,46 @@ export const createPlayer = (): Player => ({
   facingLeft: false,
   animation: PlayerAnimation.Idle,
   animationTime: 0,
+  isAttacking: false,
+  attackAnimationTime: 0,
 })
 
 type UpdatePlayerOptions = {
   player: Player
   input: GameInput
   deltaSeconds: number
+  coins: Array<GameObject>
+  slimes: Array<GameObject>
+  dispatch: AppDispatch
 }
 
 export const updatePlayer = ({
   player,
   input,
   deltaSeconds,
+  coins,
+  slimes,
+  dispatch,
 }: UpdatePlayerOptions) => {
   let direction = 0
   if (input.left) direction -= 1
   if (input.right) direction += 1
+
+  const isFacingSomebody = slimes.some(slime => {
+    if ((slime.value ?? 0) <= 0) return false
+
+    return checkIfPlayerInFrontOfObject(player, slime)
+  })
+
+  if (isFacingSomebody) {
+    if (player.facingLeft && direction < 0) {
+      direction = 0
+      player.velocityX = 0
+    } else if (!player.facingLeft && direction > 0) {
+      direction = 0
+      player.velocityX = 0
+    }
+  }
 
   if (direction !== 0) {
     player.velocityX += direction * PLAYER_CONFIG.acceleration * deltaSeconds
@@ -64,9 +104,14 @@ export const updatePlayer = ({
 
   player.velocityY += PLAYER_CONFIG.gravity * deltaSeconds
   player.x += player.velocityX * deltaSeconds
+
+  const groudY =
+    checkIfPlayerOverPlatform(player) && player.y < GROUND_Y
+      ? PREVIEW_SCENE.platform.y
+      : GROUND_Y
+
   player.y += player.velocityY * deltaSeconds
 
-  // Временные границы экрана и земля
   if (player.x < PLAYER_CONFIG.halfWidth) {
     player.x = PLAYER_CONFIG.halfWidth
     player.velocityX = 0
@@ -75,10 +120,43 @@ export const updatePlayer = ({
     player.x = GAME_WIDTH - PLAYER_CONFIG.halfWidth
     player.velocityX = 0
   }
-  if (player.y >= GROUND_Y) {
-    player.y = GROUND_Y
+
+  if (player.y >= groudY) {
+    player.y = groudY
     player.velocityY = 0
     player.grounded = true
+  }
+
+  if (input.attackPressed && !player.isAttacking) {
+    player.isAttacking = true
+    player.attackAnimationTime = 0
+
+    for (const slime of slimes) {
+      if (
+        (slime.value ?? 0) >= 0 &&
+        checkIfPlayerInFrontOfObject(player, slime)
+      ) {
+        slime.value = Math.max(0, (slime.value ?? 0) - 1)
+      }
+    }
+  }
+
+  input.attackPressed = false
+
+  if (player.isAttacking) {
+    player.attackAnimationTime += deltaSeconds
+
+    if (player.attackAnimationTime >= ATTACK_DURATION) {
+      player.isAttacking = false
+      player.attackAnimationTime = 0
+    }
+  }
+
+  for (const coin of coins) {
+    if (!coin.got && checkIfTheSameCoordinates(player, coin)) {
+      coin.got = true
+      dispatch(incrementScore(1))
+    }
   }
 
   let animation: Player['animation'] = PlayerAnimation.Idle
