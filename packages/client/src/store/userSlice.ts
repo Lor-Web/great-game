@@ -10,7 +10,7 @@ interface UserState {
 const initialState: UserState = {
   user: null,
   isAuth: false,
-  isLoading: false,
+  isLoading: true,
 }
 
 const userSlice = createSlice({
@@ -26,9 +26,14 @@ const userSlice = createSlice({
     clearUser: state => {
       state.user = null
       state.isAuth = false
+      state.isLoading = false
+    },
+    // Экшен для изменения статуса загрузки
+    setLoading: (state, action: PayloadAction<boolean>) => {
+      state.isLoading = action.payload
     },
   },
 })
 
-export const { setUser, clearUser } = userSlice.actions
+export const { setUser, clearUser, setLoading } = userSlice.actions
 export default userSlice.reducer

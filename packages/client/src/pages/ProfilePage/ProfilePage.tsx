@@ -7,7 +7,6 @@ import {
   MAIN_PAGE_PATH,
 } from '../../shared/constants/routes.constant'
 import { useAppDispatch, useAppSelector } from '../../store/hooks'
-import { MockUser } from './config'
 import { ProfileAvatar } from './ProfileAvatar/ProfileAvatar'
 import { ProfileInfo } from './ProfileInfo/ProfileInfo'
 import { ProfilePassword } from './ProfilePassword/ProfilePassword'
@@ -15,18 +14,17 @@ import { ProfilePassword } from './ProfilePassword/ProfilePassword'
 import styles from './profile-page.module.css'
 
 export const ProfilePage = () => {
-  const userFromStore = useAppSelector(state => state.user.user)
-  const user = userFromStore ?? MockUser //проверка по моковым данным удалить при работе апи на следующем спринте
+  const user = useAppSelector(state => state.user.user)
 
   const [isPasswordFormOpen, setIsPasswordFormOpen] = useState(false)
   const [isEditing, setIsEditing] = useState(false)
 
-  // api проверка, вернуть на следующем спринте
-  // if (!userFromStore) {
-  //   return <p>Данные пользователя не найдены</p>
-  // }
   const dispatch = useAppDispatch()
   const navigate = useNavigate()
+
+  if (!user) {
+    return <p>Данные пользователя не найдены</p>
+  }
 
   const handleLogout = async () => {
     try {

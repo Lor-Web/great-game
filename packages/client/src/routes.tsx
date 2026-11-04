@@ -1,5 +1,3 @@
-// Прослойка для отслеживания статуса пользователя, когда заработает в него нужно будет обернуть недоступные для авторизованных пользователей страницы
-//import { ProtectedLayout } from './protectedLayout/protectedLayout'
 import { ForumContent } from './pages/ForumPage/ForumContent/ForumContent'
 import {
   ForumPage,
@@ -16,6 +14,7 @@ import { NotFoundPage } from './pages/NotFoundPage/NotFoundPage'
 import { ProfilePage } from './pages/ProfilePage/ProfilePage'
 import { RegisterPage } from './pages/RegisterPage/RegisterPage'
 import { ServerErrorPage } from './pages/ServerErrorPage/ServerErrorPage'
+import { ProtectedLayout } from './protectedLayout/protectedLayout'
 import {
   FORUM_PAGE_PATH,
   FORUM_SECTION_PAGE_PATH,
@@ -32,24 +31,30 @@ import {
 
 export const routes = [
   {
+    Component: ProtectedLayout,
+    children: [
+      //Защищенные маршруты
+      {
+        path: MAIN_PAGE_PATH,
+        Component: MainPage,
+      },
+      {
+        path: PROFILE_PAGE_PATH,
+        Component: ProfilePage,
+      },
+      {
+        path: GAME_PAGE_PATH,
+        Component: GamePage,
+      },
+    ],
+  },
+  {
     path: LOGIN_PAGE_PATH,
     Component: LoginPage,
   },
   {
     path: REGISTER_PAGE_PATH,
     Component: RegisterPage,
-  },
-  {
-    path: MAIN_PAGE_PATH,
-    Component: MainPage,
-  },
-  {
-    path: PROFILE_PAGE_PATH,
-    Component: ProfilePage,
-  },
-  {
-    path: GAME_PAGE_PATH,
-    Component: GamePage,
   },
   {
     path: LEADERBOARD_PAGE_PATH,

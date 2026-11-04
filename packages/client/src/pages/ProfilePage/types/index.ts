@@ -5,6 +5,8 @@ export interface ProfileAvatarProps {
   isEditing: boolean
 }
 
+export type AvatarImgProps = Pick<ProfileAvatarProps, 'avatar'>
+
 export interface ProfileInfoProps {
   user: UserDTO
   isEditing: boolean

@@ -24,6 +24,17 @@ type RequestOptions = {
   signal?: AbortSignal
 }
 
+export interface HTTPError {
+  status?: number
+  statusText?: string
+  reason?: string
+  response?: string
+  responseText?: string
+  timeout?: number
+  error?: unknown
+  request?: XMLHttpRequest
+}
+
 // Единый тип для http-методов,
 type HTTPMethod = <R = unknown>(
   url: string,

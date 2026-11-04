@@ -1,5 +1,5 @@
 import type { AppDispatch } from '../../store'
-import { clearUser, setUser } from '../../store/userSlice'
+import { clearUser, setLoading, setUser } from '../../store/userSlice'
 import UserAPI, {
   type PasswordUpdateRequest,
   type ProfileUpdateRequest,
@@ -7,6 +7,16 @@ import UserAPI, {
   type SignUpRequest,
   type UserDTO,
 } from '../Models/user-api'
+import type { HTTPError } from '../services/HTTPTransport'
+
+function isHTTPError(error: unknown): error is HTTPError {
+  return (
+    typeof error === 'object' &&
+    error !== null &&
+    'status' in error &&
+    typeof error.status === 'number'
+  )
+}
 
 class UserController {
   public async signin(
@@ -26,21 +36,23 @@ class UserController {
     dispatch: AppDispatch,
     signal?: AbortSignal
   ): Promise<UserDTO | null> {
-    return UserAPI.getUser(signal)
-      .then((data: UserDTO) => {
-        dispatch(setUser(data))
-        return data
-      })
-      .catch(error => {
-        if (error?.status === 401) {
-          dispatch(setUser(null))
-          return null
-        }
+    dispatch(setLoading(true))
+    try {
+      const data = await UserAPI.getUser(signal)
+      dispatch(setUser(data))
+      return data
+    } catch (error) {
+      if (isHTTPError(error) && error.status === 401) {
+        dispatch(setUser(null))
+        return null
+      }
 
-        if (signal?.aborted) return null
-        console.error('getUser error:', error)
-        throw error
-      })
+      if (signal?.aborted) return null
+      console.error('getUser error:', error)
+      throw error
+    } finally {
+      dispatch(setLoading(false))
+    }
   }
 
   public async signup(

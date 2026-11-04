@@ -1,10 +1,9 @@
-import { UserOutlined } from '@ant-design/icons'
-import { Avatar, message, Upload, type UploadProps } from 'antd'
+import { message, Upload, type UploadProps } from 'antd'
 import { useState } from 'react'
 import UserController from '../../../api/Controllers/UserController'
-import { BASE_URL } from '../../../api/config'
 import { useAppDispatch } from '../../../store/hooks'
 import type { ProfileAvatarProps } from '../types'
+import { AvatarImg } from './AvatarImg/AvatarImg'
 
 import styles from './profile-avatar.module.css'
 
@@ -48,24 +47,14 @@ export const ProfileAvatar = ({ avatar, isEditing }: ProfileAvatarProps) => {
           onChange={handleChange}
           disabled={isLoading}>
           <div className={styles.avatarUpload}>
-            <Avatar
-              className={styles.avatarImage}
-              src={avatar ? `${BASE_URL}/resources${avatar}` : undefined}
-              icon={!avatar && <UserOutlined />}
-              size={120}
-            />
+            <AvatarImg avatar={avatar} />
             <div className={styles.avatarOverlay}>
               {isLoading ? 'Загрузка...' : 'Поменять аватар'}
             </div>
           </div>
         </Upload>
       ) : (
-        <Avatar
-          className={styles.avatarImage}
-          src={avatar ? `${BASE_URL}/resources${avatar}` : undefined}
-          icon={!avatar && <UserOutlined />}
-          size={120}
-        />
+        <AvatarImg avatar={avatar} />
       )}
     </div>
   )
