@@ -4,6 +4,7 @@ import { incrementScore } from '../../../store/gameSlice'
 import { PREVIEW_SCENE } from '../constants'
 import { drawPreview } from '../helpers'
 import { createGameLoop } from '../utils/gameLoop'
+import { GameObject } from '../utils/gameObject'
 import { createKeyboardControls } from '../utils/keyboard'
 import { loadGameImages } from '../utils/loader'
 import type { GameImages } from '../utils/manifest'
@@ -22,8 +23,8 @@ export const useGameCanvas = () => {
     let images: GameImages | undefined
     let failed = false
     const player = createPlayer()
-    const coins = PREVIEW_SCENE.coins
-    const slimes = PREVIEW_SCENE.slimes
+    const coins = PREVIEW_SCENE.coins.map(coin => new GameObject(coin))
+    const slimes = PREVIEW_SCENE.slimes.map(slime => new GameObject(slime))
     const controls = createKeyboardControls(canvas)
 
     let elapsedSeconds = 0

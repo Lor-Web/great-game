@@ -25,8 +25,11 @@ export type Player = {
   facingLeft: boolean
   animation: PlayerAnimation
   animationTime: number
-  isAttacking: boolean
-  attackAnimationTime: number
+  attack: {
+    isAttacking: boolean
+    attackAnimationTime: number
+    success: boolean
+  }
 }
 
 export const createPlayer = (): Player => ({
@@ -38,8 +41,11 @@ export const createPlayer = (): Player => ({
   facingLeft: false,
   animation: PlayerAnimation.Idle,
   animationTime: 0,
-  isAttacking: false,
-  attackAnimationTime: 0,
+  attack: {
+    isAttacking: false,
+    attackAnimationTime: 0,
+    success: false,
+  },
 })
 
 type UpdatePlayerOptions = {
@@ -104,13 +110,14 @@ export const updatePlayer = ({
 
   player.velocityY += PLAYER_CONFIG.gravity * deltaSeconds
   player.x += player.velocityX * deltaSeconds
+  player.y += player.velocityY * deltaSeconds
 
   const groudY =
-    checkIfPlayerOverPlatform(player) && player.y < GROUND_Y
+    checkIfPlayerOverPlatform(player) &&
+    player.y < GROUND_Y &&
+    player.velocityY > 0
       ? PREVIEW_SCENE.platform.y
       : GROUND_Y
-
-  player.y += player.velocityY * deltaSeconds
 
   if (player.x < PLAYER_CONFIG.halfWidth) {
     player.x = PLAYER_CONFIG.halfWidth
@@ -127,28 +134,34 @@ export const updatePlayer = ({
     player.grounded = true
   }
 
-  if (input.attackPressed && !player.isAttacking) {
-    player.isAttacking = true
-    player.attackAnimationTime = 0
-
-    for (const slime of slimes) {
-      if (
-        (slime.value ?? 0) >= 0 &&
-        checkIfPlayerInFrontOfObject(player, slime)
-      ) {
-        slime.value = Math.max(0, (slime.value ?? 0) - 1)
-      }
-    }
+  if (input.attackPressed && !player.attack.isAttacking) {
+    player.attack.isAttacking = true
+    player.attack.attackAnimationTime = 0
+    player.attack.success = false
+    input.attackPressed = false
   }
 
-  input.attackPressed = false
+  if (player.attack.isAttacking) {
+    player.attack.attackAnimationTime += deltaSeconds
 
-  if (player.isAttacking) {
-    player.attackAnimationTime += deltaSeconds
+    if (
+      player.attack.attackAnimationTime > ATTACK_DURATION / 2 &&
+      !player.attack.success
+    ) {
+      for (const slime of slimes) {
+        if (
+          (slime.value ?? 0) >= 0 &&
+          checkIfPlayerInFrontOfObject(player, slime)
+        ) {
+          slime.value = Math.max(0, (slime.value ?? 0) - 1)
+          player.attack.success = true
+        }
+      }
+    }
 
-    if (player.attackAnimationTime >= ATTACK_DURATION) {
-      player.isAttacking = false
-      player.attackAnimationTime = 0
+    if (player.attack.attackAnimationTime >= ATTACK_DURATION) {
+      player.attack.isAttacking = false
+      player.attack.attackAnimationTime = 0
     }
   }
 

@@ -189,12 +189,12 @@ export const drawPreview = ({
       facingLeft: player.facingLeft,
     })
 
-    if (player.isAttacking) {
+    if (player.attack.isAttacking) {
       drawAnimation({
         context,
         images,
         clip: animations.excalibur,
-        elapsedSeconds: player.attackAnimationTime,
+        elapsedSeconds: player.attack.attackAnimationTime,
         x: player.x,
         y: player.y - GAME_OBJECT_CONFIG.excaliburGap,
         facingLeft: player.facingLeft,

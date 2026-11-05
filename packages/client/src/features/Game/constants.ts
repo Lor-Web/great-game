@@ -12,7 +12,7 @@ export const PLAYER_CONFIG = {
   acceleration: 900,
   braking: 1200,
   gravity: 1100,
-  jumpSpeed: 400,
+  jumpSpeed: 440,
   halfWidth: 12,
   spriteBottomOffset: 8,
 }
