@@ -9,11 +9,13 @@ export enum SpriteId {
   Knight = 'knight',
   Slime = 'slime',
   Coin = 'coin',
+  Excalibur = 'excalibur',
 }
 
 export enum GameKey {
   Left = 'KeyA',
   Right = 'KeyD',
+  Attack = 'KeyQ',
   ArrowLeft = 'ArrowLeft',
   ArrowRight = 'ArrowRight',
   Jump = 'Space',

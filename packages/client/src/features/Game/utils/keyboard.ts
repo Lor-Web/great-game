@@ -4,12 +4,18 @@ export type GameInput = {
   left: boolean
   right: boolean
   jumpPressed: boolean
+  attackPressed: boolean
 }
 
 export const createKeyboardControls = (canvas: HTMLCanvasElement) => {
   const keys = new Set<string>()
-  const input: GameInput = { left: false, right: false, jumpPressed: false }
-  const gameKeys = Object.values(GameKey)
+  const input: GameInput = {
+    left: false,
+    right: false,
+    jumpPressed: false,
+    attackPressed: false,
+  }
+  const gameKeys = Object.values(GameKey) as string[]
 
   const updateDirection = () => {
     input.left = keys.has(GameKey.Left) || keys.has(GameKey.ArrowLeft)
@@ -21,6 +27,7 @@ export const createKeyboardControls = (canvas: HTMLCanvasElement) => {
     input.left = false
     input.right = false
     input.jumpPressed = false
+    input.attackPressed = false
   }
 
   const onKeyDown = (event: KeyboardEvent) => {
@@ -33,6 +40,14 @@ export const createKeyboardControls = (canvas: HTMLCanvasElement) => {
       !keys.has(GameKey.Jump)
     ) {
       input.jumpPressed = true
+    }
+    // Удержание Q не запускает новую атаку.
+    if (
+      event.code === GameKey.Attack &&
+      !event.repeat &&
+      !keys.has(GameKey.Attack)
+    ) {
+      input.attackPressed = true
     }
     keys.add(event.code)
     updateDirection()

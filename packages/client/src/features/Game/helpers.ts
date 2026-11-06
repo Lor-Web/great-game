@@ -1,5 +1,6 @@
 import {
   GAME_HEIGHT,
+  GAME_OBJECT_CONFIG,
   GAME_WIDTH,
   GROUND_Y,
   PLAYER_CONFIG,
@@ -27,6 +28,7 @@ type DrawAnimationOptions = {
   x: number
   y: number
   facingLeft?: boolean
+  rotate?: number
 }
 
 type DrawPreviewOptions = {
@@ -35,6 +37,24 @@ type DrawPreviewOptions = {
   failed?: boolean
   elapsedSeconds?: number
   player?: Player
+  coins?: Array<GameObject>
+  slimes?: Array<GameObject>
+}
+
+export type GameObject = {
+  x: number
+  y: number
+  value?: number //сколько очков приносит
+  got?: boolean
+  facingLeft?: boolean
+}
+
+interface DrawHealthBarOptions {
+  context: CanvasRenderingContext2D
+  x: number
+  y: number
+  currentHp: number
+  maxHp: number
 }
 
 export const drawAnimation = ({
@@ -45,6 +65,7 @@ export const drawAnimation = ({
   x,
   y,
   facingLeft = false,
+  rotate = 0,
 }: DrawAnimationOptions) => {
   const elapsedFrames = Math.floor(elapsedSeconds * clip.fps)
   let frame = elapsedFrames % clip.frameCount
@@ -56,6 +77,7 @@ export const drawAnimation = ({
   // Координаты задают середину нижнего края кадра — точку опоры персонажа.
   context.translate(Math.round(x), Math.round(y))
   if (facingLeft) context.scale(-1, 1)
+  context.rotate(rotate)
   context.drawImage(
     images[clip.sprite],
     frame * clip.frameWidth,
@@ -76,6 +98,8 @@ export const drawPreview = ({
   failed = false,
   elapsedSeconds = 0,
   player,
+  coins,
+  slimes,
 }: DrawPreviewOptions) => {
   context.imageSmoothingEnabled = false
   context.fillStyle = PREVIEW_STYLE.sky
@@ -144,41 +168,153 @@ export const drawPreview = ({
         TILE_SIZE
       )
     }
-    if (player) {
-      const clip =
-        player.animation === PlayerAnimation.Run
-          ? animations.knightRun
-          : animations.knightIdle
-      const animationTime =
-        player.animation === PlayerAnimation.Air ? 0 : player.animationTime
-      drawAnimation({
-        context,
-        images,
-        clip,
-        elapsedSeconds: animationTime,
-        x: player.x,
-        y: player.y + PLAYER_CONFIG.spriteBottomOffset, // У спрайта с рыцарем лишние пустые пиксели снизу
-        facingLeft: player.facingLeft,
-      })
+
+    if (!player) {
+      return
     }
-    for (const slime of PREVIEW_SCENE.slimes) {
-      drawAnimation({
-        context,
-        images,
-        clip: animations.slimeIdle,
-        elapsedSeconds,
-        x: slime.x,
-        y: slime.y,
-        facingLeft: slime.facingLeft,
-      })
-    }
+
+    const clip =
+      player.animation === PlayerAnimation.Run
+        ? animations.knightRun
+        : animations.knightIdle
+    const animationTime =
+      player.animation === PlayerAnimation.Air ? 0 : player.animationTime
     drawAnimation({
       context,
       images,
-      clip: animations.coinSpin,
-      elapsedSeconds,
-      x: PREVIEW_SCENE.coin.x,
-      y: PREVIEW_SCENE.coin.y,
+      clip,
+      elapsedSeconds: animationTime,
+      x: player.x,
+      y: player.y + PLAYER_CONFIG.spriteBottomOffset, // У спрайта с рыцарем лишние пустые пиксели снизу
+      facingLeft: player.facingLeft,
     })
+
+    if (player.attack.isAttacking) {
+      drawAnimation({
+        context,
+        images,
+        clip: animations.excalibur,
+        elapsedSeconds: player.attack.attackAnimationTime,
+        x: player.x,
+        y: player.y - GAME_OBJECT_CONFIG.excaliburGap,
+        facingLeft: player.facingLeft,
+        rotate: Math.PI / 2,
+      })
+    }
+
+    if (slimes) {
+      for (const slime of slimes) {
+        if ((slime.value ?? 0) <= 0) {
+          continue
+        }
+        drawAnimation({
+          context,
+          images,
+          clip: animations.slimeIdle,
+          elapsedSeconds,
+          x: slime.x,
+          y: slime.y,
+          facingLeft: slime.facingLeft,
+        })
+        drawHealthBar({
+          context,
+          x: slime.x,
+          y: slime.y,
+          currentHp: slime.value || 0,
+          maxHp: 2,
+        })
+      }
+    }
+
+    if (coins) {
+      for (const coin of coins) {
+        if (coin.got) {
+          continue
+        }
+
+        drawAnimation({
+          context,
+          images,
+          clip: animations.coinSpin,
+          elapsedSeconds,
+          x: coin.x,
+          y: coin.y,
+        })
+      }
+    }
   }
+}
+
+export function checkIfTheSameCoordinates(
+  player: Player,
+  object: { x: number; y: number }
+) {
+  const { x: pX, y: pY } = player
+  const { x: oX, y: oY } = object
+  const gap = GAME_OBJECT_CONFIG.coordinatesGap
+
+  return pX >= oX - gap && pX <= oX + gap && pY >= oY - gap && pY <= oY + gap
+}
+
+export function checkIfPlayerOverPlatform(player: Player) {
+  const { x: pX, y: pY } = player
+  const { x: platformX, y: platformY, width } = PREVIEW_SCENE.platform
+  const gap = GAME_OBJECT_CONFIG.coordinatesGap
+
+  return (
+    pX >= platformX - gap &&
+    pX <= platformX + width + gap &&
+    pY <= platformY + gap + 5
+  )
+}
+
+export function checkIfPlayerInFrontOfObject(
+  player: Player,
+  object: { x: number; y: number }
+) {
+  const { x: pX, y: pY, facingLeft } = player
+  const { x: oX, y: oY } = object
+  const maxDistance = GAME_OBJECT_CONFIG.attackMaxDistance
+  const gap = GAME_OBJECT_CONFIG.coordinatesGap
+
+  const isTheSameY = pY >= oY - gap && pY <= oY + gap
+
+  const distanceX = Math.abs(pX - oX)
+  const isFacingByX = facingLeft
+    ? oX < pX && distanceX <= maxDistance
+    : oX > pX && distanceX <= maxDistance
+
+  return isTheSameY && isFacingByX
+}
+
+export const drawHealthBar = ({
+  context,
+  x,
+  y,
+  currentHp,
+  maxHp,
+}: DrawHealthBarOptions) => {
+  if (currentHp <= 0) return
+
+  const { width, height, upGap, maxColor, middleColor, minColor } =
+    GAME_OBJECT_CONFIG.healthBar
+
+  const barX = x - width / 2
+  const barY = y - upGap
+
+  context.fillStyle = 'rgba(0, 0, 0, 0.5)'
+  context.fillRect(barX, barY, width, height)
+
+  const hpPercentage = Math.max(0, Math.min(1, currentHp / maxHp))
+  const currentWidth = width * hpPercentage
+
+  if (hpPercentage > 0.5) {
+    context.fillStyle = maxColor
+  } else if (hpPercentage > 0.2) {
+    context.fillStyle = middleColor
+  } else {
+    context.fillStyle = minColor
+  }
+
+  context.fillRect(barX, barY, currentWidth, height)
 }

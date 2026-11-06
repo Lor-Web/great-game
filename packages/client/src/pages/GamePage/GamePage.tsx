@@ -1,14 +1,18 @@
 import { useEffect, useState } from 'react'
+import { useDispatch } from 'react-redux'
 import Game from '../../features/Game/Game'
+import { restore } from '../../store/gameSlice'
 import { GAME_DURATION_SECONDS } from './constants'
 import { GameOver } from './GameOver/GameOver'
 import { GameStart } from './GameStart/GameStart'
 import { GameStats } from './GameStats/GameStats'
+
 import styles from './game-page.module.css'
 
-export const GamePage = () => {
-  type GameStatus = 'ready' | 'playing' | 'finished'
+type GameStatus = 'ready' | 'playing' | 'finished'
 
+export const GamePage = () => {
+  const dispatch = useDispatch()
   const [gameStatus, setGameStatus] = useState<GameStatus>('ready')
   const [timeLeft, setTimeLeft] = useState(GAME_DURATION_SECONDS)
   const [gameStats, setGameStats] = useState({
@@ -16,6 +20,10 @@ export const GamePage = () => {
     lives: 3,
     world: 1,
   })
+
+  useEffect(() => {
+    dispatch(restore())
+  }, [dispatch])
 
   useEffect(() => {
     if (gameStatus !== 'playing') {
@@ -54,7 +62,6 @@ export const GamePage = () => {
   return (
     <main className={styles.gamePage}>
       <GameStats
-        score={gameStats.score}
         lives={gameStats.lives}
         world={gameStats.world}
         timeLeft={timeLeft}

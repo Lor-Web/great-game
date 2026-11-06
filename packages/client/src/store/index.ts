@@ -1,9 +1,11 @@
 import { configureStore } from '@reduxjs/toolkit'
+import gameReducer from './gameSlice'
 import userReducer from './userSlice'
 
 export const store = configureStore({
   reducer: {
     user: userReducer, // Теперь состояние пользователя доступно во всем приложении
+    game: gameReducer,
   },
 })
 
