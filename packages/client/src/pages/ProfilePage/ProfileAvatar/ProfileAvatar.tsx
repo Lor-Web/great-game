@@ -12,12 +12,19 @@ export const ProfileAvatar = ({ avatar, isEditing }: ProfileAvatarProps) => {
   const [isLoading, setIsLoading] = useState(false)
 
   const handleChange: UploadProps['onChange'] = async ({ file }) => {
-    const selectedFile = file.originFileObj ?? (file as unknown as File)
+    const selectedFile = file instanceof File ? file : file.originFileObj
+
+    const MAX_FILE_SIZE = 5 * 1024 * 1024
 
     if (!selectedFile) return
 
     if (!selectedFile.type.startsWith('image/')) {
       message.error('Выберите файл изображения')
+      return
+    }
+
+    if (selectedFile.size > MAX_FILE_SIZE) {
+      message.error('Размер файла не должен превышать 5 МБ')
       return
     }
 

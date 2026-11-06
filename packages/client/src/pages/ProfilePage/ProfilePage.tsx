@@ -1,4 +1,4 @@
-import { Button } from 'antd'
+import { Button, message } from 'antd'
 import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import UserController from '../../api/Controllers/UserController'
@@ -18,6 +18,7 @@ export const ProfilePage = () => {
 
   const [isPasswordFormOpen, setIsPasswordFormOpen] = useState(false)
   const [isEditing, setIsEditing] = useState(false)
+  const [isLogoutLoading, setIsLogoutLoading] = useState(false)
 
   const dispatch = useAppDispatch()
   const navigate = useNavigate()
@@ -27,11 +28,16 @@ export const ProfilePage = () => {
   }
 
   const handleLogout = async () => {
+    setIsLogoutLoading(true)
+
     try {
       await UserController.logout(dispatch)
       navigate(LOGIN_PAGE_PATH, { replace: true })
     } catch (error) {
       console.error('Ошибка выхода:', error)
+      message.error('Не удалось выйти из аккаунта')
+    } finally {
+      setIsLogoutLoading(false)
     }
   }
 
@@ -58,6 +64,7 @@ export const ProfilePage = () => {
                 isEditing={isEditing}
                 onEdit={() => setIsEditing(true)}
                 onSuccess={() => setIsEditing(false)}
+                onCancel={() => setIsEditing(false)}
               />
 
               {!isEditing && (
@@ -68,7 +75,9 @@ export const ProfilePage = () => {
             </>
           )}
 
-          <Button onClick={handleLogout}>Выйти</Button>
+          <Button onClick={handleLogout} loading={isLogoutLoading}>
+            Выйти
+          </Button>
         </div>
       </div>
 

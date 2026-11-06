@@ -29,6 +29,13 @@
   transition: opacity 0.2s ease;
 }
 
-.avatarUpload:hover .avatarOverlay {
+.avatarUpload:hover .avatarOverlay,
+.avatarUpload:focus-within .avatarOverlay {
   opacity: 1;
+}
+
+@media (hover: none) {
+  .avatarOverlay {
+    opacity: 1;
+  }
 }

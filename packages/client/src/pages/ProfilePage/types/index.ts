@@ -12,6 +12,7 @@ export interface ProfileInfoProps {
   isEditing: boolean
   onEdit: () => void
   onSuccess: () => void
+  onCancel: () => void
 }
 
 export interface ProfilePasswordProps {

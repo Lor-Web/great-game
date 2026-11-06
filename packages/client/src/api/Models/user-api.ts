@@ -85,7 +85,7 @@ class UserAPI extends BaseAPI {
 
   // Обновление аватара
   updateAvatar(data: FormData) {
-    return httpTransport.put<UserDTO>('user/profile/avatar', {
+    return httpTransport.put<UserDTO>('/user/profile/avatar', {
       data,
       validate: data => UserDTOSchema.safeParse(data).success,
     })

@@ -6,14 +6,10 @@ import type { ProfilePasswordFormValues, ProfilePasswordProps } from '../types'
 import styles from './profile-password.module.css'
 
 export const ProfilePassword = ({ onSuccess }: ProfilePasswordProps) => {
-  const [form] = Form.useForm()
+  const [form] = Form.useForm<ProfilePasswordFormValues>()
   const [isLoading, setIsLoading] = useState(false)
 
-  const handleSubmit = async (values: {
-    oldPassword: string
-    newPassword: string
-    confirmPassword: string
-  }) => {
+  const handleSubmit = async (values: ProfilePasswordFormValues) => {
     setIsLoading(true)
 
     try {

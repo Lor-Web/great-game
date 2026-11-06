@@ -1,5 +1,5 @@
 import { Button, Form, Input, message } from 'antd'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import UserController from '../../../api/Controllers/UserController'
 import type { ProfileUpdateRequest } from '../../../api/Models/user-api'
 import { useAppDispatch } from '../../../store/hooks'
@@ -12,28 +12,23 @@ export const ProfileInfo = ({
   isEditing,
   onEdit,
   onSuccess,
+  onCancel,
 }: ProfileInfoProps) => {
   const dispatch = useAppDispatch()
-  const [form] = Form.useForm()
+  const [form] = Form.useForm<ProfileUpdateRequest>()
   const [isLoading, setIsLoading] = useState(false)
 
   const handleEdit = () => {
-    form.setFieldsValue({
-      first_name: user.first_name,
-      second_name: user.second_name,
-      display_name: user.display_name ?? '',
-      login: user.login,
-      email: user.email,
-      phone: user.phone,
-    })
     onEdit()
   }
 
   const handleSubmit = async (values: ProfileUpdateRequest) => {
     setIsLoading(true)
-
     try {
-      await UserController.updateProfile(values, dispatch)
+      const updatedUser = await UserController.updateProfile(values, dispatch)
+
+      if (!updatedUser) return
+
       message.success('Данные успешно обновлены')
       onSuccess()
     } catch (error) {
@@ -43,6 +38,19 @@ export const ProfileInfo = ({
       setIsLoading(false)
     }
   }
+
+  useEffect(() => {
+    if (isEditing) {
+      form.setFieldsValue({
+        first_name: user.first_name,
+        second_name: user.second_name,
+        display_name: user.display_name ?? '',
+        login: user.login,
+        email: user.email,
+        phone: user.phone,
+      })
+    }
+  }, [user, isEditing, form])
 
   if (!isEditing) {
     return (
@@ -122,6 +130,9 @@ export const ProfileInfo = ({
 
         <Button type="primary" htmlType="submit" loading={isLoading}>
           Сохранить
+        </Button>
+        <Button onClick={onCancel} disabled={isLoading}>
+          Отмена
         </Button>
       </Form>
     </section>
