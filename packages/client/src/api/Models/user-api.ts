@@ -78,6 +78,19 @@ class UserAPI extends BaseAPI {
     })
   }
 
+  // Смена пароля
+  updatePassword(data: PasswordUpdateRequest) {
+    return httpTransport.put<void>('/user/password', { data })
+  }
+
+  // Обновление аватара
+  updateAvatar(data: FormData) {
+    return httpTransport.put<UserDTO>('/user/profile/avatar', {
+      data,
+      validate: data => UserDTOSchema.safeParse(data).success,
+    })
+  }
+
   delete(): Promise<unknown> {
     throw new Error('ChatAPI.delete is not implemented')
   }

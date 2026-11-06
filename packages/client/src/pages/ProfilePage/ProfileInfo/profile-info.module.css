@@ -1,0 +1,8 @@
+.userData {
+  color: var(--bg-blue-color);
+}
+
+.button {
+  display: flex;
+  justify-content: center;
+}

@@ -5,12 +5,14 @@ interface UserState {
   user: UserDTO | null
   isAuth: boolean
   isLoading: boolean
+  authError: boolean
 }
 
 const initialState: UserState = {
   user: null,
   isAuth: false,
-  isLoading: false,
+  isLoading: true,
+  authError: false,
 }
 
 const userSlice = createSlice({
@@ -26,9 +28,20 @@ const userSlice = createSlice({
     clearUser: state => {
       state.user = null
       state.isAuth = false
+      state.isLoading = false
+      state.authError = false
+    },
+    // Экшен для изменения статуса загрузки
+    setLoading: (state, action: PayloadAction<boolean>) => {
+      state.isLoading = action.payload
+    },
+    // Экшен для изменения статуса ошибки проверки авторизации
+    setAuthError: (state, action: PayloadAction<boolean>) => {
+      state.authError = action.payload
     },
   },
 })
 
-export const { setUser, clearUser } = userSlice.actions
+export const { setUser, clearUser, setLoading, setAuthError } =
+  userSlice.actions
 export default userSlice.reducer
