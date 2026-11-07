@@ -10,7 +10,7 @@ import { store } from './store'
 const router = createBrowserRouter(routes)
 
 ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
-   <ErrorBoundary>
+  <ErrorBoundary>
     <Provider store={store}>
       <HelmetProvider>
         <AuthInitializer>
@@ -18,5 +18,5 @@ ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
         </AuthInitializer>
       </HelmetProvider>
     </Provider>
-   </ErrorBoundary>
+  </ErrorBoundary>
 )
