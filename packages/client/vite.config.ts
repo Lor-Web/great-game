@@ -18,4 +18,17 @@ export default defineConfig({
     outDir: path.join(__dirname, 'dist/client'),
   },
   plugins: [react()],
+  test: {
+    globals: true,
+    environment: 'jsdom',
+    // Настройка setupFiles для RTL (добавим этот файл на следующем шаге)
+    setupFiles: ['./src/setupTests.ts'],
+    // Исключаем тесты Playwright из зоны видимости Vitest
+    exclude: [
+      '**/node_modules/**',
+      '**/dist/**',
+      '**/e2e/**',
+      '**/*.e2e.{ts,tsx}',
+    ],
+  },
 })
