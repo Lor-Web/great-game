@@ -1,5 +1,6 @@
 import { useEffect, useRef } from 'react'
 import { useDispatch } from 'react-redux'
+import type { CharacterSkin } from '../../../pages/GamePage/constants'
 import { incrementScore } from '../../../store/gameSlice'
 import { PREVIEW_SCENE } from '../constants'
 import { drawPreview } from '../helpers'
@@ -10,9 +11,19 @@ import { loadGameImages } from '../utils/loader'
 import type { GameImages } from '../utils/manifest'
 import { createPlayer, updatePlayer } from '../utils/player'
 
-export const useGameCanvas = () => {
+export const useGameCanvas = (
+  isPlaying: boolean,
+  selectedSkin: CharacterSkin
+) => {
   const canvasRef = useRef<HTMLCanvasElement>(null)
+  const isPlayingRef = useRef(isPlaying)
+  const syncVisibilityRef = useRef<(() => void) | null>(null)
   const dispatch = useDispatch()
+
+  useEffect(() => {
+    isPlayingRef.current = isPlaying
+    syncVisibilityRef.current?.()
+  }, [isPlaying])
 
   useEffect(() => {
     const canvas = canvasRef.current
@@ -49,15 +60,17 @@ export const useGameCanvas = () => {
           player,
           coins,
           slimes,
+          selectedSkin,
         })
       },
     })
     const syncVisibility = () => {
-      if (document.hidden || !images) {
+      if (document.hidden || !images || !isPlayingRef.current) {
         controls.reset()
         loop.stop()
       } else loop.start()
     }
+    syncVisibilityRef.current = syncVisibility
     drawPreview({ context, slimes })
     // Симуляция начинается только после загрузки всех необходимых спрайтов.
     loadGameImages()
@@ -65,7 +78,7 @@ export const useGameCanvas = () => {
         if (disposed) return
         images = loadedImages
         controls.reset()
-        drawPreview({ context, images, player })
+        drawPreview({ context, images, player, selectedSkin })
         syncVisibility()
       })
       .catch(() => {
@@ -78,11 +91,12 @@ export const useGameCanvas = () => {
 
     return () => {
       disposed = true
+      syncVisibilityRef.current = null
       loop.stop()
       controls.dispose()
       document.removeEventListener('visibilitychange', syncVisibility)
     }
-  }, [dispatch])
+  }, [dispatch, selectedSkin])
 
   return canvasRef
 }
