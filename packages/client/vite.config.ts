@@ -21,8 +21,7 @@ export default defineConfig({
   test: {
     globals: true,
     environment: 'jsdom',
-    // Настройка setupFiles для RTL (добавим этот файл на следующем шаге)
-    setupFiles: ['./src/setupTests.ts'],
+    setupFiles: ['./src/test-setup.ts'],
     // Исключаем тесты Playwright из зоны видимости Vitest
     exclude: [
       '**/node_modules/**',
