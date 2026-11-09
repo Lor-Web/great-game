@@ -1,5 +1,6 @@
 import type { CharacterSkin } from '../../pages/GamePage/constants'
 import {
+  CHARACTER_ANIMATIONS,
   GAME_HEIGHT,
   GAME_OBJECT_CONFIG,
   GAME_WIDTH,
@@ -102,7 +103,7 @@ export const drawPreview = ({
   player,
   coins,
   slimes,
-  selectedSkin = 'knight',
+  selectedSkin = SpriteId.Knight,
 }: DrawPreviewOptions) => {
   context.imageSmoothingEnabled = false
   context.fillStyle = PREVIEW_STYLE.sky
@@ -176,29 +177,11 @@ export const drawPreview = ({
       return
     }
 
-    const characterAnimations = {
-      knight: {
-        idle: animations.knightIdle,
-        run: animations.knightRun,
-      },
-      percival: {
-        idle: animations.percivalIdle,
-        run: animations.percivalRun,
-      },
-      merlin: {
-        idle: animations.merlinIdle,
-        run: animations.merlinRun,
-      },
-      king: {
-        idle: animations.kingIdle,
-        run: animations.kingRun,
-      },
-    }
-
     const clip =
       player.animation === PlayerAnimation.Run
-        ? characterAnimations[selectedSkin].run
-        : characterAnimations[selectedSkin].idle
+        ? CHARACTER_ANIMATIONS[selectedSkin][PlayerAnimation.Run]
+        : CHARACTER_ANIMATIONS[selectedSkin][PlayerAnimation.Idle]
+
     const animationTime =
       player.animation === PlayerAnimation.Air ? 0 : player.animationTime
     drawAnimation({

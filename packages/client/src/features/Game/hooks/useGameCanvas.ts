@@ -22,6 +22,9 @@ export const useGameCanvas = (
 
   useEffect(() => {
     isPlayingRef.current = isPlaying
+    if (isPlaying) {
+      canvasRef.current?.focus()
+    }
     syncVisibilityRef.current?.()
   }, [isPlaying])
 

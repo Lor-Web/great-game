@@ -1,3 +1,6 @@
+import { PlayerAnimation, SpriteId } from './enums'
+import { animations } from './utils/manifest'
+
 export const GAME_WIDTH = 640
 export const GAME_HEIGHT = 360
 export const SPRITE_SCALE = 2
@@ -80,6 +83,25 @@ export const PREVIEW_STYLE = {
   text: '#ffffff',
   titleFont: 'bold 20px monospace',
   messageFont: '14px monospace',
+}
+
+export const CHARACTER_ANIMATIONS = {
+  [SpriteId.Knight]: {
+    [PlayerAnimation.Idle]: animations.knightIdle,
+    [PlayerAnimation.Run]: animations.knightRun,
+  },
+  [SpriteId.Percival]: {
+    [PlayerAnimation.Idle]: animations.percivalIdle,
+    [PlayerAnimation.Run]: animations.percivalRun,
+  },
+  [SpriteId.Merlin]: {
+    [PlayerAnimation.Idle]: animations.merlinIdle,
+    [PlayerAnimation.Run]: animations.merlinRun,
+  },
+  [SpriteId.King]: {
+    [PlayerAnimation.Idle]: animations.kingIdle,
+    [PlayerAnimation.Run]: animations.kingRun,
+  },
 }
 
 export const PREVIEW_HUD = {
