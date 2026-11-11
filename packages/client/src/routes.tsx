@@ -1,3 +1,4 @@
+import { RouteErrorBoundary } from './errorBoundary/RouteErrorBoundary'
 import { ForumContent } from './pages/ForumPage/ForumContent/ForumContent'
 import {
   ForumPage,
@@ -31,57 +32,62 @@ import {
 
 export const routes = [
   {
-    Component: ProtectedLayout,
+    ErrorBoundary: RouteErrorBoundary,
     children: [
-      //Защищенные маршруты
       {
-        path: MAIN_PAGE_PATH,
-        Component: MainPage,
+        Component: ProtectedLayout,
+        children: [
+          //Защищенные маршруты
+          {
+            path: MAIN_PAGE_PATH,
+            Component: MainPage,
+          },
+          {
+            path: PROFILE_PAGE_PATH,
+            Component: ProfilePage,
+          },
+          {
+            path: GAME_PAGE_PATH,
+            Component: GamePage,
+          },
+        ],
       },
       {
-        path: PROFILE_PAGE_PATH,
-        Component: ProfilePage,
+        path: LOGIN_PAGE_PATH,
+        Component: LoginPage,
       },
       {
-        path: GAME_PAGE_PATH,
-        Component: GamePage,
+        path: REGISTER_PAGE_PATH,
+        Component: RegisterPage,
+      },
+      {
+        path: LEADERBOARD_PAGE_PATH,
+        Component: LeaderBoardPage,
+      },
+      {
+        path: FORUM_PAGE_PATH,
+        Component: ForumPage,
+        loader: forumSectionsLoader,
+      },
+      {
+        path: FORUM_SECTION_PAGE_PATH,
+        Component: Themes,
+        loader: forumThemesLoader,
+      },
+      {
+        path: THEME_PAGE_PATH,
+        Component: ForumContent,
+        loader: themeMessagesLoader,
+      },
+      {
+        path: NOT_FOUND_PAGE_PATH,
+        Component: NotFoundPage,
+      },
+      {
+        path: SERVER_ERROR_PAGE_PATH,
+        Component: ServerErrorPage,
+        //далее нужно будет понять что именно будем обрабатывать для 500х
       },
     ],
-  },
-  {
-    path: LOGIN_PAGE_PATH,
-    Component: LoginPage,
-  },
-  {
-    path: REGISTER_PAGE_PATH,
-    Component: RegisterPage,
-  },
-  {
-    path: LEADERBOARD_PAGE_PATH,
-    Component: LeaderBoardPage,
-  },
-  {
-    path: FORUM_PAGE_PATH,
-    Component: ForumPage,
-    loader: forumSectionsLoader,
-  },
-  {
-    path: FORUM_SECTION_PAGE_PATH,
-    Component: Themes,
-    loader: forumThemesLoader,
-  },
-  {
-    path: THEME_PAGE_PATH,
-    Component: ForumContent,
-    loader: themeMessagesLoader,
-  },
-  {
-    path: NOT_FOUND_PAGE_PATH,
-    Component: NotFoundPage,
-  },
-  {
-    path: SERVER_ERROR_PAGE_PATH,
-    Component: ServerErrorPage,
-    //далее нужно будет понять что именно будем обрабатывать для 500х
   },
 ]
