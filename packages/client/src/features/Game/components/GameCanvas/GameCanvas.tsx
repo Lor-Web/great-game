@@ -1,9 +1,15 @@
+import type { CharacterSkin } from '../../constants'
 import { GAME_HEIGHT, GAME_WIDTH } from '../../constants'
 import { useGameCanvas } from '../../hooks/useGameCanvas'
 import styles from './game-canvas.module.css'
 
-const GameCanvas = () => {
-  const canvasRef = useGameCanvas()
+interface GameCanvasProps {
+  isPlaying: boolean
+  selectedSkin: CharacterSkin
+}
+
+const GameCanvas = ({ isPlaying, selectedSkin }: GameCanvasProps) => {
+  const canvasRef = useGameCanvas(isPlaying, selectedSkin)
   return (
     <canvas
       ref={canvasRef}

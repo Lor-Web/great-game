@@ -1,15 +1,34 @@
 import { Button } from 'antd'
 import { useEffect, useState } from 'react'
+import {
+  CHARACTER_SKINS,
+  type CharacterSkin,
+} from '../../../features/Game/constants'
 import { GameScreen } from '../components/GameScreen/GameScreen'
 import screenStyles from '../components/GameScreen/game-screen.module.css'
-import { COUNTDOWN_SECONDS, GO_DISPLAY_MS } from '../constants'
+import {
+  COUNTDOWN_SECONDS,
+  DIFFICULTY_SETTINGS,
+  type Difficulty,
+  GO_DISPLAY_MS,
+} from '../constants'
 import styles from './game-start.module.css'
 
 type GameStartProps = {
+  difficulty: Difficulty
+  onDifficultyChange: (difficulty: Difficulty) => void
+  selectedSkin: CharacterSkin
+  onSkinChange: (skin: CharacterSkin) => void
   onStart: () => void
 }
 
-export const GameStart = ({ onStart }: GameStartProps) => {
+export const GameStart = ({
+  difficulty,
+  onDifficultyChange,
+  selectedSkin,
+  onSkinChange,
+  onStart,
+}: GameStartProps) => {
   const [isCountdown, setIsCountdown] = useState(false)
   const [countdown, setCountdown] = useState(COUNTDOWN_SECONDS)
   const [showGo, setShowGo] = useState(false)
@@ -61,12 +80,67 @@ export const GameStart = ({ onStart }: GameStartProps) => {
         ) : (
           <>
             <h1>READY?</h1>
-            <Button
-              type="primary"
-              className={screenStyles.button}
-              onClick={() => setIsCountdown(true)}>
-              START
-            </Button>
+
+            <div className={styles.startLayout}>
+              <div className={styles.skinSelection}>
+                <h2>ПЕРСОНАЖ</h2>
+
+                {CHARACTER_SKINS.map(skin => (
+                  <button
+                    key={skin}
+                    type="button"
+                    className={`${styles.skinCard} ${
+                      selectedSkin === skin ? styles.skinCardActive : ''
+                    }`}
+                    aria-pressed={selectedSkin === skin}
+                    onClick={() => onSkinChange(skin)}>
+                    {skin.toUpperCase()}
+                  </button>
+                ))}
+              </div>
+
+              <Button
+                type="primary"
+                className={screenStyles.button}
+                onClick={() => setIsCountdown(true)}>
+                START
+              </Button>
+
+              <div className={styles.difficulty}>
+                <h2>СЛОЖНОСТЬ</h2>
+
+                {(Object.keys(DIFFICULTY_SETTINGS) as Difficulty[]).map(
+                  level => {
+                    const settings = DIFFICULTY_SETTINGS[level]
+
+                    return (
+                      <button
+                        key={level}
+                        type="button"
+                        className={`${styles.difficultyCard} ${
+                          difficulty === level
+                            ? styles.difficultyCardActive
+                            : ''
+                        }`}
+                        aria-pressed={difficulty === level}
+                        onClick={() => onDifficultyChange(level)}>
+                        <span className={styles.difficultyTitle}>
+                          {settings.label}
+                        </span>
+                        <span
+                          role="img"
+                          aria-label={`Количество жизней: ${settings.lives}`}>
+                          <span aria-hidden="true">
+                            Жизни: {'♥ '.repeat(settings.lives)}
+                          </span>
+                        </span>
+                        <span>Время: {settings.duration} сек.</span>
+                      </button>
+                    )
+                  }
+                )}
+              </div>
+            </div>
           </>
         )}
       </GameScreen>
