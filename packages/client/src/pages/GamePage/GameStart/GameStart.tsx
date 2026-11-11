@@ -1,9 +1,12 @@
 import { Button } from 'antd'
 import { useEffect, useState } from 'react'
+import {
+  CHARACTER_SKINS,
+  type CharacterSkin,
+} from '../../../features/Game/constants'
 import { GameScreen } from '../components/GameScreen/GameScreen'
 import screenStyles from '../components/GameScreen/game-screen.module.css'
 import {
-  type CharacterSkin,
   COUNTDOWN_SECONDS,
   DIFFICULTY_SETTINGS,
   type Difficulty,
@@ -82,9 +85,7 @@ export const GameStart = ({
               <div className={styles.skinSelection}>
                 <h2>ПЕРСОНАЖ</h2>
 
-                {(
-                  ['knight', 'percival', 'merlin', 'king'] as CharacterSkin[]
-                ).map(skin => (
+                {CHARACTER_SKINS.map(skin => (
                   <button
                     key={skin}
                     type="button"

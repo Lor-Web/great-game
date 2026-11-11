@@ -1,8 +1,6 @@
 export const COUNTDOWN_SECONDS = 3
 export const GO_DISPLAY_MS = 500
 
-export type CharacterSkin = 'knight' | 'percival' | 'merlin' | 'king'
-
 export type Difficulty = 'easy' | 'medium' | 'hard'
 
 export const DIFFICULTY_SETTINGS = {

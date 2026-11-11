@@ -104,6 +104,15 @@ export const CHARACTER_ANIMATIONS = {
   },
 }
 
+export type CharacterSkin = keyof typeof CHARACTER_ANIMATIONS
+
+export const CHARACTER_SKINS = [
+  SpriteId.Knight,
+  SpriteId.Percival,
+  SpriteId.Merlin,
+  SpriteId.King,
+] satisfies CharacterSkin[]
+
 export const PREVIEW_HUD = {
   x: 20,
   y: 20,

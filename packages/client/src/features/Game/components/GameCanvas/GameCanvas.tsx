@@ -1,4 +1,4 @@
-import type { CharacterSkin } from '../../../../pages/GamePage/constants'
+import type { CharacterSkin } from '../../constants'
 import { GAME_HEIGHT, GAME_WIDTH } from '../../constants'
 import { useGameCanvas } from '../../hooks/useGameCanvas'
 import styles from './game-canvas.module.css'

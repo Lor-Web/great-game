@@ -1,7 +1,7 @@
 import { useEffect, useRef } from 'react'
 import { useDispatch } from 'react-redux'
-import type { CharacterSkin } from '../../../pages/GamePage/constants'
 import { incrementScore } from '../../../store/gameSlice'
+import type { CharacterSkin } from '../constants'
 import { PREVIEW_SCENE } from '../constants'
 import { drawPreview } from '../helpers'
 import { createGameLoop } from '../utils/gameLoop'
@@ -17,7 +17,9 @@ export const useGameCanvas = (
 ) => {
   const canvasRef = useRef<HTMLCanvasElement>(null)
   const isPlayingRef = useRef(isPlaying)
+  const selectedSkinRef = useRef<CharacterSkin>(selectedSkin)
   const syncVisibilityRef = useRef<(() => void) | null>(null)
+  const redrawPreviewRef = useRef<(() => void) | null>(null)
   const dispatch = useDispatch()
 
   useEffect(() => {
@@ -27,6 +29,11 @@ export const useGameCanvas = (
     }
     syncVisibilityRef.current?.()
   }, [isPlaying])
+
+  useEffect(() => {
+    selectedSkinRef.current = selectedSkin
+    redrawPreviewRef.current?.()
+  }, [selectedSkin])
 
   useEffect(() => {
     const canvas = canvasRef.current
@@ -63,10 +70,20 @@ export const useGameCanvas = (
           player,
           coins,
           slimes,
-          selectedSkin,
+          selectedSkin: selectedSkinRef.current,
         })
       },
     })
+    redrawPreviewRef.current = () => {
+      if (images && !failed && !isPlayingRef.current) {
+        drawPreview({
+          context,
+          images,
+          player,
+          selectedSkin: selectedSkinRef.current,
+        })
+      }
+    }
     const syncVisibility = () => {
       if (document.hidden || !images || !isPlayingRef.current) {
         controls.reset()
@@ -81,7 +98,12 @@ export const useGameCanvas = (
         if (disposed) return
         images = loadedImages
         controls.reset()
-        drawPreview({ context, images, player, selectedSkin })
+        drawPreview({
+          context,
+          images,
+          player,
+          selectedSkin: selectedSkinRef.current,
+        })
         syncVisibility()
       })
       .catch(() => {
@@ -94,12 +116,13 @@ export const useGameCanvas = (
 
     return () => {
       disposed = true
+      redrawPreviewRef.current = null
       syncVisibilityRef.current = null
       loop.stop()
       controls.dispose()
       document.removeEventListener('visibilitychange', syncVisibility)
     }
-  }, [dispatch, selectedSkin])
+  }, [dispatch])
 
   return canvasRef
 }

@@ -1,14 +1,12 @@
 import { useEffect, useState } from 'react'
 import { useDispatch } from 'react-redux'
 import { Link } from 'react-router-dom'
+import type { CharacterSkin } from '../../features/Game/constants'
+import { SpriteId } from '../../features/Game/enums'
 import Game from '../../features/Game/Game'
 import { MAIN_PAGE_PATH } from '../../shared/constants/routes.constant'
 import { restore } from '../../store/gameSlice'
-import {
-  type CharacterSkin,
-  DIFFICULTY_SETTINGS,
-  type Difficulty,
-} from './constants'
+import { DIFFICULTY_SETTINGS, type Difficulty } from './constants'
 import { GameOver } from './GameOver/GameOver'
 import { GameStart } from './GameStart/GameStart'
 import { GameStats } from './GameStats/GameStats'
@@ -20,7 +18,9 @@ type GameStatus = 'ready' | 'playing' | 'finished'
 export const GamePage = () => {
   const dispatch = useDispatch()
   const [difficulty, setDifficulty] = useState<Difficulty>('easy')
-  const [selectedSkin, setSelectedSkin] = useState<CharacterSkin>('knight')
+  const [selectedSkin, setSelectedSkin] = useState<CharacterSkin>(
+    SpriteId.Knight
+  )
   const { lives, duration } = DIFFICULTY_SETTINGS[difficulty]
   const [gameStatus, setGameStatus] = useState<GameStatus>('ready')
   const [timeLeft, setTimeLeft] = useState<number>(duration)
@@ -83,9 +83,20 @@ export const GamePage = () => {
   return (
     <main className={styles.gamePage}>
       {gameStatus !== 'finished' && (
-        <Link to={MAIN_PAGE_PATH} className={styles.backButton}>
-          MAIN MENU
-        </Link>
+        <div className={styles.navigation}>
+          <Link to={MAIN_PAGE_PATH} className={styles.backButton}>
+            MAIN MENU
+          </Link>
+
+          {gameStatus === 'playing' && (
+            <button
+              type="button"
+              className={styles.backButton}
+              onClick={handleRetry}>
+              RESTART
+            </button>
+          )}
+        </div>
       )}
 
       <GameStats

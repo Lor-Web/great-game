@@ -1,4 +1,4 @@
-import type { CharacterSkin } from '../../pages/GamePage/constants'
+import type { CharacterSkin } from './constants'
 import {
   CHARACTER_ANIMATIONS,
   GAME_HEIGHT,
