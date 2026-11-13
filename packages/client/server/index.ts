@@ -1,9 +1,10 @@
 import dotenv from 'dotenv'
+
 dotenv.config()
 
+import path from 'node:path'
+import { fileURLToPath } from 'node:url'
 import express from 'express'
-import path from 'path'
-import { fileURLToPath } from 'url'
 import { createServer as createViteServer } from 'vite'
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url))

@@ -1,18 +1,19 @@
-import React from 'react'
 import ReactDOM from 'react-dom/client'
-import { createBrowserRouter, RouterProvider } from 'react-router-dom'
-import { Provider } from 'react-redux'
 import { HelmetProvider } from 'react-helmet-async'
-import { store } from './store'
-
+import { Provider } from 'react-redux'
+import { createBrowserRouter, RouterProvider } from 'react-router-dom'
+import { AuthInitializer } from './components/AuthInitializer/AuthInitializer'
 import { routes } from './routes'
+import { store } from './store'
 
 const router = createBrowserRouter(routes)
 
 ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
-  <HelmetProvider>
-    <Provider store={store}>
-      <RouterProvider router={router} />
-    </Provider>
-  </HelmetProvider>
+  <Provider store={store}>
+    <HelmetProvider>
+      <AuthInitializer>
+        <RouterProvider router={router} />
+      </AuthInitializer>
+    </HelmetProvider>
+  </Provider>
 )

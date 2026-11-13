@@ -1,0 +1,64 @@
+.background {
+  padding-bottom: 30px;
+  background: var(--bg-blue-color);
+  font-family: "Press Start 2P", cursive;
+  color: var(--text-shadow);
+  width: 100vw;
+  min-height: 100vh;
+  background-image: url("../../../public/main-bg.png");
+  background-position-y: bottom;
+  background-repeat: repeat-x;
+}
+
+.profileBg {
+  width: 100%;
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 50px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  background: var(--dark-overlay);
+  border: 1px solid var(--orange);
+}
+
+.profileBgLight {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 50px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+  background: rgba(255, 255, 255, 0.9);
+}
+
+.title {
+  font-size: 24px;
+  color: var(--logo-color);
+  padding: 56px;
+  margin: 0 0 30px 0;
+  text-shadow: 4px 4px var(--text-shadow);
+  text-align: center;
+  background: var(--bg-transparent-substrate);
+  border-bottom: 4px solid var(--black);
+}
+
+.navigation {
+  margin-top: 18px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.navigationLink {
+  margin-bottom: 12px;
+  background-color: var(--button-bg-primary);
+  border-radius: 8px;
+  color: var(--text-light);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  text-decoration: none;
+}

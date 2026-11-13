@@ -1,0 +1,88 @@
+.hudheader {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 40px;
+  background: var(--bg-transparent-substrate);
+  border-bottom: 4px solid #000;
+}
+
+.background {
+  background: var(--bg-blue-color); /* Тот самый синий цвет неба из Марио */
+  font-family: "Press Start 2P", cursive;
+  color: #ffffff;
+  overflow: hidden;
+  width: 100vw;
+  height: 100vh;
+  background-image: url("../../../public/main-bg.png");
+  background-position-y: bottom;
+  background-repeat: repeat-x;
+}
+
+.logo {
+  font-size: 24px;
+  margin: 56px;
+  color: var(--logo-color);
+  text-shadow: 4px 4px var(--text-shadow);
+}
+
+.navigation {
+  margin-top: 18px;
+  display: flex;
+  flex-direction: column;
+}
+
+.navigationLink {
+  margin-bottom: 12px;
+  background-color: var(--button-bg-primary);
+  border-radius: 8px;
+  color: var(--text-light);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  text-decoration: none;
+}
+
+.body {
+  display: flex;
+  flex-direction: column;
+  margin: auto;
+  margin-top: 24px;
+  width: 75%;
+  align-items: center;
+}
+
+.startLink {
+  font-size: 32px;
+  padding: 24px 48px;
+  animation: blink 1.5s infinite;
+  margin-bottom: 24px;
+  background-color: var(--button-bg-accent);
+  border-radius: 8px;
+  color: var(--text-light);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+  &:hover {
+    animation: none;
+  }
+}
+
+@keyframes blink {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.8;
+  }
+}
+
+.description {
+  background: var(--bg-transparent-substrate);
+  padding: 16px;
+  line-height: 1.5em;
+}

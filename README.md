@@ -34,7 +34,7 @@
 
 ```yarn lint```
 
-### Форматирование prettier
+### Форматирование
 
 ```yarn format```
 
@@ -49,7 +49,7 @@
 `yarn preview --scope server`
 
 ## Хуки
-В проекте используется [lefthook](https://github.com/evilmartians/lefthook)
+В проекте используются [husky](https://typicode.github.io/husky/) и [lint-staged](https://github.com/lint-staged/lint-staged): перед коммитом Biome проверяет staged-файлы и сам правит то, что может.
 Если очень-очень нужно пропустить проверки, используйте `--no-verify` (но не злоупотребляйте :)
 
 ## Ой, ничего не работает :(
