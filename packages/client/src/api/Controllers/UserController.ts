@@ -44,6 +44,16 @@ class UserController {
 
       return await this.getUser(dispatch, signal)
     } catch (error) {
+      //Костыль если пользователь уже зарегестрирован
+      if (
+        isHTTPError(error) &&
+        error.status === 400 &&
+        error.response?.includes('User already in system')
+      ) {
+        await UserAPI.logout()
+        return await this.getUser(dispatch, signal)
+      }
+
       console.error('signin error:', error)
       throw error
     }
