@@ -1,6 +1,6 @@
 import { expect, type Page, test } from '@playwright/test'
 
-test.describe('Страница игры и игровой движок (HAR E2E)', () => {
+test.describe('Страница игры и игровой движок', () => {
   test.beforeEach(async ({ page }) => {
     //Заходим на главную страницу
     await page.goto('/')
@@ -42,7 +42,9 @@ test.describe('Страница игры и игровой движок (HAR E2E
     const canvas = page.getByLabel('Игровое поле игры')
     await expect(canvas).toBeVisible()
 
-    const startButton = page.locator('main button').first()
+    // Используем локатор кнопки старта
+    const startButton = page.getByRole('button', { name: 'START' })
+
     if (await startButton.isVisible()) {
       await startButton.click()
       await expect(startButton).toBeHidden()

@@ -3,6 +3,7 @@ import { render, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { Provider } from 'react-redux'
 import { beforeEach, describe, expect, test, vi } from 'vitest'
+import { CHARACTER_SKINS } from '../../constants'
 import * as loaderUtils from '../../utils/loader'
 import * as playerUtils from '../../utils/player'
 import GameCanvas from './GameCanvas'
@@ -43,7 +44,7 @@ describe('Интеграционные тесты игровой сцены (Gam
   test('должен корректно рендерить элемент canvas с атрибутами размеров и доступности', () => {
     render(
       <Provider store={createTestStore()}>
-        <GameCanvas />
+        <GameCanvas isPlaying={true} selectedSkin={CHARACTER_SKINS[0]} />
       </Provider>
     )
 
@@ -61,7 +62,7 @@ describe('Интеграционные тесты игровой сцены (Gam
 
     render(
       <Provider store={createTestStore()}>
-        <GameCanvas />
+        <GameCanvas isPlaying={true} selectedSkin={CHARACTER_SKINS[0]} />
       </Provider>
     )
 

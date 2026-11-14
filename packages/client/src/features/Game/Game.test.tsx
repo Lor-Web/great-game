@@ -4,6 +4,7 @@ import { ConfigProvider } from 'antd'
 import type React from 'react'
 import { Provider } from 'react-redux'
 import { beforeEach, describe, expect, test, vi } from 'vitest'
+import { CHARACTER_SKINS } from './constants'
 import Game from './Game'
 
 // Создаем мок-хранилище Redux
@@ -45,12 +46,16 @@ describe('Интеграционные тесты родительского к�
   }
 
   test('должен соответствовать сохраненному HTML-снапшоту структуры компонента', () => {
-    const { asFragment } = renderWithProviders(<Game />)
+    const { asFragment } = renderWithProviders(
+      <Game isPlaying={false} selectedSkin={CHARACTER_SKINS[0]} />
+    )
     expect(asFragment()).toMatchSnapshot()
   })
 
   test('должен успешно монтировать и рендерить дочерний компонент GameCanvas внутри себя', () => {
-    renderWithProviders(<Game />)
+    renderWithProviders(
+      <Game isPlaying={true} selectedSkin={CHARACTER_SKINS[0]} />
+    )
 
     // Проверяем, что дочерний холст успешно отрендерился внутри разметки
     const canvasElement = screen.getByTestId('mock-game-canvas')
