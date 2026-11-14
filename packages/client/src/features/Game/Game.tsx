@@ -5,11 +5,18 @@ import styles from './game.module.css'
 interface GameProps {
   isPlaying: boolean
   selectedSkin: CharacterSkin
+  onFall: () => void
+  onComplete: () => void
 }
 
-const Game = ({ isPlaying, selectedSkin }: GameProps) => (
+const Game = ({ isPlaying, selectedSkin, onFall, onComplete }: GameProps) => (
   <div className={styles.game}>
-    <GameCanvas isPlaying={isPlaying} selectedSkin={selectedSkin} />
+    <GameCanvas
+      isPlaying={isPlaying}
+      selectedSkin={selectedSkin}
+      onFall={onFall}
+      onComplete={onComplete}
+    />
   </div>
 )
 
