@@ -1,4 +1,6 @@
+import type { CharacterSkin } from './constants'
 import {
+  CHARACTER_ANIMATIONS,
   GAME_HEIGHT,
   GAME_OBJECT_CONFIG,
   GAME_WIDTH,
@@ -39,6 +41,7 @@ type DrawPreviewOptions = {
   player?: Player
   coins?: Array<GameObject>
   slimes?: Array<GameObject>
+  selectedSkin?: CharacterSkin
 }
 
 export type GameObject = {
@@ -100,6 +103,7 @@ export const drawPreview = ({
   player,
   coins,
   slimes,
+  selectedSkin = SpriteId.Knight,
 }: DrawPreviewOptions) => {
   context.imageSmoothingEnabled = false
   context.fillStyle = PREVIEW_STYLE.sky
@@ -175,8 +179,9 @@ export const drawPreview = ({
 
     const clip =
       player.animation === PlayerAnimation.Run
-        ? animations.knightRun
-        : animations.knightIdle
+        ? CHARACTER_ANIMATIONS[selectedSkin][PlayerAnimation.Run]
+        : CHARACTER_ANIMATIONS[selectedSkin][PlayerAnimation.Idle]
+
     const animationTime =
       player.animation === PlayerAnimation.Air ? 0 : player.animationTime
     drawAnimation({

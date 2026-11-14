@@ -4,3 +4,11 @@
   justify-content: center;
   text-decoration: none;
 }
+
+.score {
+  margin: 0;
+  color: var(--text-light);
+  font-size: 18px;
+  text-align: center;
+  text-shadow: 2px 2px var(--text-shadow);
+}

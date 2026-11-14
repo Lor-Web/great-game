@@ -1,8 +1,12 @@
 import { useEffect, useState } from 'react'
 import { useDispatch } from 'react-redux'
+import { Link } from 'react-router-dom'
+import type { CharacterSkin } from '../../features/Game/constants'
+import { SpriteId } from '../../features/Game/enums'
 import Game from '../../features/Game/Game'
+import { MAIN_PAGE_PATH } from '../../shared/constants/routes.constant'
 import { restore } from '../../store/gameSlice'
-import { GAME_DURATION_SECONDS } from './constants'
+import { DIFFICULTY_SETTINGS, type Difficulty } from './constants'
 import { GameOver } from './GameOver/GameOver'
 import { GameStart } from './GameStart/GameStart'
 import { GameStats } from './GameStats/GameStats'
@@ -13,11 +17,16 @@ type GameStatus = 'ready' | 'playing' | 'finished'
 
 export const GamePage = () => {
   const dispatch = useDispatch()
+  const [difficulty, setDifficulty] = useState<Difficulty>('easy')
+  const [selectedSkin, setSelectedSkin] = useState<CharacterSkin>(
+    SpriteId.Knight
+  )
+  const { lives, duration } = DIFFICULTY_SETTINGS[difficulty]
   const [gameStatus, setGameStatus] = useState<GameStatus>('ready')
-  const [timeLeft, setTimeLeft] = useState(GAME_DURATION_SECONDS)
+  const [timeLeft, setTimeLeft] = useState<number>(duration)
+  const [gameSession, setGameSession] = useState(0)
   const [gameStats, setGameStats] = useState({
-    score: 0,
-    lives: 3,
+    lives,
     world: 1,
   })
 
@@ -30,7 +39,7 @@ export const GamePage = () => {
       return
     }
 
-    const endTime = Date.now() + GAME_DURATION_SECONDS * 1000
+    const endTime = Date.now() + duration * 1000
 
     const timer = setInterval(() => {
       const remainingSeconds = Math.max(
@@ -41,7 +50,7 @@ export const GamePage = () => {
     }, 1000)
 
     return () => clearInterval(timer)
-  }, [gameStatus])
+  }, [gameStatus, duration])
 
   useEffect(() => {
     if (gameStatus === 'playing' && (timeLeft === 0 || gameStats.lives <= 0)) {
@@ -49,11 +58,23 @@ export const GamePage = () => {
     }
   }, [gameStatus, timeLeft, gameStats.lives])
 
-  const handleRetry = () => {
-    setTimeLeft(GAME_DURATION_SECONDS)
+  const handleDifficultyChange = (newDifficulty: Difficulty) => {
+    const settings = DIFFICULTY_SETTINGS[newDifficulty]
+
+    setDifficulty(newDifficulty)
+    setTimeLeft(settings.duration)
     setGameStats({
-      score: 0,
-      lives: 3,
+      lives: settings.lives,
+      world: 1,
+    })
+  }
+
+  const handleRetry = () => {
+    dispatch(restore())
+    setGameSession(prev => prev + 1)
+    setTimeLeft(duration)
+    setGameStats({
+      lives,
       world: 1,
     })
     setGameStatus('ready')
@@ -61,16 +82,43 @@ export const GamePage = () => {
 
   return (
     <main className={styles.gamePage}>
+      {gameStatus !== 'finished' && (
+        <div className={styles.navigation}>
+          <Link to={MAIN_PAGE_PATH} className={styles.backButton}>
+            MAIN MENU
+          </Link>
+
+          {gameStatus === 'playing' && (
+            <button
+              type="button"
+              className={styles.backButton}
+              onClick={handleRetry}>
+              RESTART
+            </button>
+          )}
+        </div>
+      )}
+
       <GameStats
         lives={gameStats.lives}
         world={gameStats.world}
         timeLeft={timeLeft}
       />
 
-      <Game />
+      <Game
+        key={gameSession}
+        isPlaying={gameStatus === 'playing'}
+        selectedSkin={selectedSkin}
+      />
 
       {gameStatus === 'ready' && (
-        <GameStart onStart={() => setGameStatus('playing')} />
+        <GameStart
+          difficulty={difficulty}
+          onDifficultyChange={handleDifficultyChange}
+          selectedSkin={selectedSkin}
+          onSkinChange={setSelectedSkin}
+          onStart={() => setGameStatus('playing')}
+        />
       )}
 
       {gameStatus === 'finished' && <GameOver onRetry={handleRetry} />}

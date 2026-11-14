@@ -7,6 +7,9 @@ export enum PlayerAnimation {
 export enum SpriteId {
   World = 'world',
   Knight = 'knight',
+  Percival = 'percival',
+  Merlin = 'merlin',
+  King = 'king',
   Slime = 'slime',
   Coin = 'coin',
   Excalibur = 'excalibur',

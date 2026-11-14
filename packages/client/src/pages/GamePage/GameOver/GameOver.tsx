@@ -1,6 +1,8 @@
 import { Button } from 'antd'
+import { useSelector } from 'react-redux'
 import { Link } from 'react-router-dom'
 import { MAIN_PAGE_PATH } from '../../../shared/constants/routes.constant'
+import type { RootState } from '../../../store'
 import { GameScreen } from '../components/GameScreen/GameScreen'
 import screenStyles from '../components/GameScreen/game-screen.module.css'
 import styles from './game-over.module.css'
@@ -10,9 +12,13 @@ type GameOverProps = {
 }
 
 export const GameOver = ({ onRetry }: GameOverProps) => {
+  const score = useSelector((state: RootState) => state.game.score)
+
   return (
     <GameScreen>
       <h1>GAME OVER</h1>
+
+      <p className={styles.score}>ВАШ СЧЁТ: {score}</p>
 
       <Button type="primary" className={screenStyles.button} onClick={onRetry}>
         RETRY

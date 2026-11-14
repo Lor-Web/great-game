@@ -5,3 +5,28 @@
   overflow: hidden;
   font-family: "Press Start 2P", monospace;
 }
+
+.navigation {
+  position: absolute;
+  top: 24px;
+  left: 24px;
+  z-index: 4;
+  display: flex;
+  gap: 12px;
+}
+
+.backButton {
+  padding: 12px;
+  border: 2px solid var(--text-light);
+  border-radius: 6px;
+  background: transparent;
+  color: var(--text-light);
+  font-family: inherit;
+  font-size: 12px;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.backButton:hover {
+  background-color: var(--bg-blue-color);
+}
