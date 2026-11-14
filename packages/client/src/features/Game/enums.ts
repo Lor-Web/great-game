@@ -11,6 +11,7 @@ export enum SpriteId {
   Merlin = 'merlin',
   King = 'king',
   Slime = 'slime',
+  PurpleSlime = 'purpleSlime',
   Coin = 'coin',
   Excalibur = 'excalibur',
 }

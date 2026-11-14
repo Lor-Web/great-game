@@ -1,19 +1,19 @@
 import type { AppDispatch } from '../../../store'
 import { incrementScore } from '../../../store/gameSlice'
-import {
-  ATTACK_DURATION,
-  GAME_WIDTH,
-  GROUND_Y,
-  PLAYER_CONFIG,
-  PREVIEW_SCENE,
-} from '../constants'
+import { ATTACK_DURATION, PLAYER_CONFIG } from '../constants'
 import { PlayerAnimation } from '../enums'
 import {
   checkIfPlayerInFrontOfObject,
-  checkIfPlayerOverPlatform,
   checkIfTheSameCoordinates,
-  type GameObject,
 } from '../helpers'
+import {
+  type Coin,
+  ISLANDS,
+  type Island,
+  type Slime,
+  SPAWN,
+  WORLD_WIDTH,
+} from '../level'
 import type { GameInput } from './keyboard'
 
 export type Player = {
@@ -32,9 +32,9 @@ export type Player = {
   }
 }
 
-export const createPlayer = (): Player => ({
-  x: PLAYER_CONFIG.startX,
-  y: GROUND_Y,
+export const createPlayer = (spawn = SPAWN): Player => ({
+  x: spawn.x,
+  y: spawn.y,
   velocityX: 0,
   velocityY: 0,
   grounded: true,
@@ -52,8 +52,8 @@ type UpdatePlayerOptions = {
   player: Player
   input: GameInput
   deltaSeconds: number
-  coins: Array<GameObject>
-  slimes: Array<GameObject>
+  coins: Coin[]
+  slimes: Slime[]
   dispatch: AppDispatch
 }
 
@@ -70,19 +70,18 @@ export const updatePlayer = ({
   if (input.right) direction += 1
 
   const isFacingSomebody = slimes.some(slime => {
-    if ((slime.value ?? 0) <= 0) return false
+    if (slime.hp <= 0 || direction === 0) return false
 
-    return checkIfPlayerInFrontOfObject(player, slime)
+    return checkIfPlayerInFrontOfObject(
+      { ...player, facingLeft: direction < 0 },
+      slime
+    )
   })
 
   if (isFacingSomebody) {
-    if (player.facingLeft && direction < 0) {
-      direction = 0
-      player.velocityX = 0
-    } else if (!player.facingLeft && direction > 0) {
-      direction = 0
-      player.velocityX = 0
-    }
+    player.facingLeft = direction < 0
+    direction = 0
+    player.velocityX = 0
   }
 
   if (direction !== 0) {
@@ -108,30 +107,35 @@ export const updatePlayer = ({
   // Нажатие обрабатывается один раз, даже если за кадр было несколько шагов.
   input.jumpPressed = false
 
+  const previousY = player.y
   player.velocityY += PLAYER_CONFIG.gravity * deltaSeconds
-  player.x += player.velocityX * deltaSeconds
+  const nextX = player.x + player.velocityX * deltaSeconds
+  player.x = Math.max(
+    PLAYER_CONFIG.halfWidth,
+    Math.min(nextX, WORLD_WIDTH - PLAYER_CONFIG.halfWidth)
+  )
+  if (player.x !== nextX) player.velocityX = 0
   player.y += player.velocityY * deltaSeconds
 
-  const groudY =
-    checkIfPlayerOverPlatform(player) &&
-    player.y < GROUND_Y &&
-    player.velocityY > 0
-      ? PREVIEW_SCENE.platform.y
-      : GROUND_Y
-
-  if (player.x < PLAYER_CONFIG.halfWidth) {
-    player.x = PLAYER_CONFIG.halfWidth
-    player.velocityX = 0
+  let landing: Island | undefined
+  if (player.velocityY >= 0) {
+    for (const island of ISLANDS) {
+      if (
+        previousY <= island.y &&
+        player.y >= island.y &&
+        player.x + PLAYER_CONFIG.halfWidth > island.x &&
+        player.x - PLAYER_CONFIG.halfWidth < island.x + island.width &&
+        (!landing || island.y < landing.y)
+      ) {
+        landing = island
+      }
+    }
   }
-  if (player.x > GAME_WIDTH - PLAYER_CONFIG.halfWidth) {
-    player.x = GAME_WIDTH - PLAYER_CONFIG.halfWidth
-    player.velocityX = 0
-  }
 
-  if (player.y >= groudY) {
-    player.y = groudY
+  player.grounded = landing !== undefined
+  if (landing) {
+    player.y = landing.y
     player.velocityY = 0
-    player.grounded = true
   }
 
   if (input.attackPressed && !player.attack.isAttacking) {
@@ -149,11 +153,8 @@ export const updatePlayer = ({
       !player.attack.success
     ) {
       for (const slime of slimes) {
-        if (
-          (slime.value ?? 0) >= 0 &&
-          checkIfPlayerInFrontOfObject(player, slime)
-        ) {
-          slime.value = Math.max(0, (slime.value ?? 0) - 1)
+        if (slime.hp > 0 && checkIfPlayerInFrontOfObject(player, slime)) {
+          slime.hp -= 1
           player.attack.success = true
         }
       }
@@ -179,4 +180,6 @@ export const updatePlayer = ({
   if (animation !== player.animation) player.animationTime = 0
   player.animation = animation
   player.animationTime += deltaSeconds
+
+  return landing
 }

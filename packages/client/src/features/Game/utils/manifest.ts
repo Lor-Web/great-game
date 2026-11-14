@@ -7,6 +7,7 @@ export const spriteFiles = {
   [SpriteId.Merlin]: 'merlin.png',
   [SpriteId.King]: 'king.png',
   [SpriteId.Slime]: 'slime_green.png',
+  [SpriteId.PurpleSlime]: 'slime_purple.png',
   [SpriteId.Coin]: 'coin.png',
   [SpriteId.Excalibur]: 'excalibur.png',
 }

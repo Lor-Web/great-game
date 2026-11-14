@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { useDispatch } from 'react-redux'
 import { Link } from 'react-router-dom'
 import type { CharacterSkin } from '../../features/Game/constants'
@@ -13,7 +13,7 @@ import { GameStats } from './GameStats/GameStats'
 
 import styles from './game-page.module.css'
 
-type GameStatus = 'ready' | 'playing' | 'finished'
+type GameStatus = 'ready' | 'playing' | 'finished' | 'won'
 
 export const GamePage = () => {
   const dispatch = useDispatch()
@@ -25,7 +25,7 @@ export const GamePage = () => {
   const [gameStatus, setGameStatus] = useState<GameStatus>('ready')
   const [timeLeft, setTimeLeft] = useState<number>(duration)
   const [gameSession, setGameSession] = useState(0)
-  const [gameStats, setGameStats] = useState({
+  const [gameStats, setGameStats] = useState<{ lives: number; world: number }>({
     lives,
     world: 1,
   })
@@ -58,6 +58,16 @@ export const GamePage = () => {
     }
   }, [gameStatus, timeLeft, gameStats.lives])
 
+  const handleFall = useCallback(() => {
+    setGameStats(stats => ({ ...stats, lives: Math.max(0, stats.lives - 1) }))
+  }, [])
+
+  const handleComplete = useCallback(() => {
+    setGameStatus(status => (status === 'playing' ? 'won' : status))
+  }, [])
+
+  const isOver = gameStatus === 'finished' || gameStatus === 'won'
+
   const handleDifficultyChange = (newDifficulty: Difficulty) => {
     const settings = DIFFICULTY_SETTINGS[newDifficulty]
 
@@ -82,7 +92,7 @@ export const GamePage = () => {
 
   return (
     <main className={styles.gamePage}>
-      {gameStatus !== 'finished' && (
+      {!isOver && (
         <div className={styles.navigation}>
           <Link to={MAIN_PAGE_PATH} className={styles.backButton}>
             MAIN MENU
@@ -109,6 +119,8 @@ export const GamePage = () => {
         key={gameSession}
         isPlaying={gameStatus === 'playing'}
         selectedSkin={selectedSkin}
+        onFall={handleFall}
+        onComplete={handleComplete}
       />
 
       {gameStatus === 'ready' && (
@@ -121,7 +133,7 @@ export const GamePage = () => {
         />
       )}
 
-      {gameStatus === 'finished' && <GameOver onRetry={handleRetry} />}
+      {isOver && <GameOver won={gameStatus === 'won'} onRetry={handleRetry} />}
     </main>
   )
 }

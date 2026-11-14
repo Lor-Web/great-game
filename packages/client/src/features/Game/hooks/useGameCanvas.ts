@@ -1,11 +1,10 @@
 import { useEffect, useRef } from 'react'
 import { useDispatch } from 'react-redux'
-import { incrementScore } from '../../../store/gameSlice'
 import type { CharacterSkin } from '../constants'
-import { PREVIEW_SCENE } from '../constants'
-import { drawPreview } from '../helpers'
+import { GAME_HEIGHT } from '../constants'
+import { drawLevel } from '../helpers'
+import { createLevel, EXIT, SPAWN } from '../level'
 import { createGameLoop } from '../utils/gameLoop'
-import { GameObject } from '../utils/gameObject'
 import { createKeyboardControls } from '../utils/keyboard'
 import { loadGameImages } from '../utils/loader'
 import type { GameImages } from '../utils/manifest'
@@ -13,13 +12,15 @@ import { createPlayer, updatePlayer } from '../utils/player'
 
 export const useGameCanvas = (
   isPlaying: boolean,
-  selectedSkin: CharacterSkin
+  selectedSkin: CharacterSkin,
+  onFall: () => void,
+  onComplete: () => void
 ) => {
   const canvasRef = useRef<HTMLCanvasElement>(null)
   const isPlayingRef = useRef(isPlaying)
   const selectedSkinRef = useRef<CharacterSkin>(selectedSkin)
   const syncVisibilityRef = useRef<(() => void) | null>(null)
-  const redrawPreviewRef = useRef<(() => void) | null>(null)
+  const redrawRef = useRef<(() => void) | null>(null)
   const dispatch = useDispatch()
 
   useEffect(() => {
@@ -32,7 +33,7 @@ export const useGameCanvas = (
 
   useEffect(() => {
     selectedSkinRef.current = selectedSkin
-    redrawPreviewRef.current?.()
+    redrawRef.current?.()
   }, [selectedSkin])
 
   useEffect(() => {
@@ -43,16 +44,31 @@ export const useGameCanvas = (
     let disposed = false
     let images: GameImages | undefined
     let failed = false
-    const player = createPlayer()
-    const coins = PREVIEW_SCENE.coins.map(coin => new GameObject(coin))
-    const slimes = PREVIEW_SCENE.slimes.map(slime => new GameObject(slime))
+    let player = createPlayer()
+    let checkpoint = SPAWN
+    let completed = false
+    const { coins, slimes } = createLevel()
     const controls = createKeyboardControls(canvas)
 
     let elapsedSeconds = 0
+    const render = () => {
+      drawLevel({
+        context,
+        images,
+        failed,
+        elapsedSeconds,
+        player,
+        coins,
+        slimes,
+        checkpointX: checkpoint.x,
+        selectedSkin: selectedSkinRef.current,
+      })
+    }
     const loop = createGameLoop({
       update: deltaSeconds => {
+        if (completed) return
         elapsedSeconds += deltaSeconds
-        updatePlayer({
+        const landing = updatePlayer({
           player,
           input: controls.input,
           deltaSeconds,
@@ -60,29 +76,27 @@ export const useGameCanvas = (
           coins,
           dispatch,
         })
+        if (landing?.checkpoint) {
+          checkpoint = { x: landing.x + 24, y: landing.y }
+        }
+        if (player.y > GAME_HEIGHT + 32) {
+          player = createPlayer(checkpoint)
+          controls.reset()
+          onFall()
+        } else if (
+          player.grounded &&
+          player.y === EXIT.y &&
+          Math.abs(player.x - EXIT.x) <= 12 &&
+          slimes.every(slime => slime.hp <= 0)
+        ) {
+          completed = true
+          onComplete()
+        }
       },
-      render: () => {
-        drawPreview({
-          context,
-          images,
-          failed,
-          elapsedSeconds,
-          player,
-          coins,
-          slimes,
-          selectedSkin: selectedSkinRef.current,
-        })
-      },
+      render,
     })
-    redrawPreviewRef.current = () => {
-      if (images && !failed && !isPlayingRef.current) {
-        drawPreview({
-          context,
-          images,
-          player,
-          selectedSkin: selectedSkinRef.current,
-        })
-      }
+    redrawRef.current = () => {
+      if (!isPlayingRef.current) render()
     }
     const syncVisibility = () => {
       if (document.hidden || !images || !isPlayingRef.current) {
@@ -91,38 +105,33 @@ export const useGameCanvas = (
       } else loop.start()
     }
     syncVisibilityRef.current = syncVisibility
-    drawPreview({ context, slimes })
+    render()
     // Симуляция начинается только после загрузки всех необходимых спрайтов.
     loadGameImages()
       .then(loadedImages => {
         if (disposed) return
         images = loadedImages
         controls.reset()
-        drawPreview({
-          context,
-          images,
-          player,
-          selectedSkin: selectedSkinRef.current,
-        })
+        render()
         syncVisibility()
       })
       .catch(() => {
         if (disposed) return
         failed = true
-        drawPreview({ context, failed })
+        render()
       })
     document.addEventListener('visibilitychange', syncVisibility)
     syncVisibility()
 
     return () => {
       disposed = true
-      redrawPreviewRef.current = null
+      redrawRef.current = null
       syncVisibilityRef.current = null
       loop.stop()
       controls.dispose()
       document.removeEventListener('visibilitychange', syncVisibility)
     }
-  }, [dispatch])
+  }, [dispatch, onFall, onComplete])
 
   return canvasRef
 }
