@@ -3,9 +3,12 @@ import type React from 'react'
 import { Navigate, Outlet, useLocation } from 'react-router-dom'
 import UserController from '../api/Controllers/UserController'
 import { useAppDispatch, useAppSelector } from '../store/hooks'
+import { hasOfflineAccess } from '../utils/offlineAccess'
 
 export const ProtectedLayout: React.FC = () => {
-  const { isAuth, isLoading, authError } = useAppSelector(state => state.user)
+  const { isAuth, isLoading, authError, isOffline } = useAppSelector(
+    state => state.user
+  )
   const dispatch = useAppDispatch()
   const location = useLocation()
   // Пока загружаются данные пользователя, не выполняем редирект
@@ -23,6 +26,10 @@ export const ProtectedLayout: React.FC = () => {
         </Button>
       </div>
     )
+  }
+  // Если пользователь ранее авторизовался, разрешаем доступ без интернета
+  if (isOffline && hasOfflineAccess()) {
+    return <Outlet />
   }
   // Если не авторизован редиректим на логин и сохраняем исходный путь
   if (!isAuth) {

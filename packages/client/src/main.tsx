@@ -5,6 +5,7 @@ import { createBrowserRouter, RouterProvider } from 'react-router-dom'
 import { AuthInitializer } from './components/AuthInitializer/AuthInitializer'
 import { routes } from './routes'
 import { store } from './store'
+import { registerServiceWorker } from './utils/registerServiceWorker'
 
 const router = createBrowserRouter(routes)
 
@@ -17,3 +18,5 @@ ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
     </HelmetProvider>
   </Provider>
 )
+
+registerServiceWorker()
