@@ -50,6 +50,25 @@ export const routes = [
             path: GAME_PAGE_PATH,
             Component: GamePage,
           },
+          {
+            path: LEADERBOARD_PAGE_PATH,
+            Component: LeaderBoardPage,
+          },
+          {
+            path: FORUM_PAGE_PATH,
+            Component: ForumPage,
+            loader: forumSectionsLoader,
+          },
+          {
+            path: FORUM_SECTION_PAGE_PATH,
+            Component: Themes,
+            loader: forumThemesLoader,
+          },
+          {
+            path: THEME_PAGE_PATH,
+            Component: ForumContent,
+            loader: themeMessagesLoader,
+          },
         ],
       },
       {
@@ -59,25 +78,6 @@ export const routes = [
       {
         path: REGISTER_PAGE_PATH,
         Component: RegisterPage,
-      },
-      {
-        path: LEADERBOARD_PAGE_PATH,
-        Component: LeaderBoardPage,
-      },
-      {
-        path: FORUM_PAGE_PATH,
-        Component: ForumPage,
-        loader: forumSectionsLoader,
-      },
-      {
-        path: FORUM_SECTION_PAGE_PATH,
-        Component: Themes,
-        loader: forumThemesLoader,
-      },
-      {
-        path: THEME_PAGE_PATH,
-        Component: ForumContent,
-        loader: themeMessagesLoader,
       },
       {
         path: NOT_FOUND_PAGE_PATH,
