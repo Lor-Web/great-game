@@ -3,6 +3,7 @@ import { HelmetProvider } from 'react-helmet-async'
 import { Provider } from 'react-redux'
 import { createBrowserRouter, RouterProvider } from 'react-router-dom'
 import { AuthInitializer } from './components/AuthInitializer/AuthInitializer'
+import { ErrorBoundary } from './errorBoundary/ErrorBoundary'
 import { routes } from './routes'
 import { store } from './store'
 import { registerServiceWorker } from './utils/registerServiceWorker'
@@ -10,13 +11,15 @@ import { registerServiceWorker } from './utils/registerServiceWorker'
 const router = createBrowserRouter(routes)
 
 ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
-  <Provider store={store}>
-    <HelmetProvider>
-      <AuthInitializer>
-        <RouterProvider router={router} />
-      </AuthInitializer>
-    </HelmetProvider>
-  </Provider>
+  <ErrorBoundary>
+    <Provider store={store}>
+      <HelmetProvider>
+        <AuthInitializer>
+          <RouterProvider router={router} />
+        </AuthInitializer>
+      </HelmetProvider>
+    </Provider>
+  </ErrorBoundary>
 )
 
 registerServiceWorker()
