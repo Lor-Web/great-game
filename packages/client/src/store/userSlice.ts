@@ -6,6 +6,7 @@ interface UserState {
   isAuth: boolean
   isLoading: boolean
   authError: boolean
+  isOffline: boolean
 }
 
 const initialState: UserState = {
@@ -13,6 +14,7 @@ const initialState: UserState = {
   isAuth: false,
   isLoading: true,
   authError: false,
+  isOffline: false,
 }
 
 const userSlice = createSlice({
@@ -30,6 +32,7 @@ const userSlice = createSlice({
       state.isAuth = false
       state.isLoading = false
       state.authError = false
+      state.isOffline = false
     },
     // Экшен для изменения статуса загрузки
     setLoading: (state, action: PayloadAction<boolean>) => {
@@ -39,9 +42,13 @@ const userSlice = createSlice({
     setAuthError: (state, action: PayloadAction<boolean>) => {
       state.authError = action.payload
     },
+    // Статус офлайн-режима
+    setOffline: (state, action: PayloadAction<boolean>) => {
+      state.isOffline = action.payload
+    },
   },
 })
 
-export const { setUser, clearUser, setLoading, setAuthError } =
+export const { setUser, clearUser, setLoading, setAuthError, setOffline } =
   userSlice.actions
 export default userSlice.reducer

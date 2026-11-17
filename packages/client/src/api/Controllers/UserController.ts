@@ -3,8 +3,17 @@ import {
   clearUser,
   setAuthError,
   setLoading,
+  setOffline,
   setUser,
 } from '../../store/userSlice'
+import {
+  clearOfflineAccess,
+  clearOfflineUser,
+  getOfflineUser,
+  hasOfflineAccess,
+  saveOfflineAccess,
+  saveOfflineUser,
+} from '../../utils/offlineAccess'
 import UserAPI, {
   type PasswordUpdateRequest,
   type ProfileUpdateRequest,
@@ -20,6 +29,15 @@ function isHTTPError(error: unknown): error is HTTPError {
     error !== null &&
     'status' in error &&
     typeof error.status === 'number'
+  )
+}
+
+function isOfflineError(error: unknown): boolean {
+  return (
+    typeof error === 'object' &&
+    error !== null &&
+    'reason' in error &&
+    (error.reason === 'Network error' || error.reason === 'Request timeout')
   )
 }
 
@@ -72,6 +90,9 @@ class UserController {
 
       dispatch(setUser(data))
       dispatch(setAuthError(false))
+      dispatch(setOffline(false))
+      saveOfflineAccess()
+      saveOfflineUser(data)
       return data
     } catch (error) {
       if (
@@ -83,11 +104,27 @@ class UserController {
       }
 
       if (isHTTPError(error) && error.status === 401) {
+        clearOfflineAccess()
+        clearOfflineUser()
+        dispatch(setOffline(false))
         dispatch(setAuthError(false))
         dispatch(setUser(null))
         return null
       }
 
+      if (!navigator.onLine && hasOfflineAccess() && isOfflineError(error)) {
+        const offlineUser = getOfflineUser()
+
+        if (offlineUser) {
+          dispatch(setUser(offlineUser))
+        }
+
+        dispatch(setOffline(true))
+        dispatch(setAuthError(false))
+        return offlineUser
+      }
+
+      dispatch(setOffline(false))
       console.error('getUser error:', error)
       dispatch(setAuthError(true))
       throw error
@@ -144,6 +181,7 @@ class UserController {
       if (sessionVersion !== this.sessionVersion) return null
 
       dispatch(setUser(user))
+      saveOfflineUser(user)
 
       return user
     } catch (error) {
@@ -159,6 +197,8 @@ class UserController {
 
     try {
       await UserAPI.logout()
+      clearOfflineAccess()
+      clearOfflineUser()
       dispatch(clearUser())
     } catch (error) {
       console.error('logout error:', error)
@@ -179,6 +219,7 @@ class UserController {
       if (sessionVersion !== this.sessionVersion) return null
 
       dispatch(setUser(user))
+      saveOfflineUser(user)
 
       return user
     } catch (error) {
