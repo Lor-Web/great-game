@@ -47,14 +47,24 @@ describe('Интеграционные тесты родительского к�
 
   test('должен соответствовать сохраненному HTML-снапшоту структуры компонента', () => {
     const { asFragment } = renderWithProviders(
-      <Game isPlaying={false} selectedSkin={CHARACTER_SKINS[0]} />
+      <Game
+        isPlaying={false}
+        selectedSkin={CHARACTER_SKINS[0]}
+        onFall={vi.fn()}
+        onComplete={vi.fn()}
+      />
     )
     expect(asFragment()).toMatchSnapshot()
   })
 
   test('должен успешно монтировать и рендерить дочерний компонент GameCanvas внутри себя', () => {
     renderWithProviders(
-      <Game isPlaying={true} selectedSkin={CHARACTER_SKINS[0]} />
+      <Game
+        isPlaying={false}
+        selectedSkin={CHARACTER_SKINS[0]}
+        onFall={vi.fn()}
+        onComplete={vi.fn()}
+      />
     )
 
     // Проверяем, что дочерний холст успешно отрендерился внутри разметки

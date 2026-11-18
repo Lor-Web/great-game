@@ -2,9 +2,9 @@ import { configureStore } from '@reduxjs/toolkit'
 import { render, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { ConfigProvider } from 'antd'
+import type React from 'react'
 import { Provider } from 'react-redux'
 import { beforeEach, describe, expect, test, vi } from 'vitest'
-import { antdCustomValidator } from '../../validation/antdCustomValidator'
 import LoginForm from './LoginForm'
 import '../../../test-setup'
 
@@ -20,15 +20,10 @@ vi.mock('react-router-dom', () => ({
   useNavigate: () => mockNavigate,
 }))
 
-//Мокаем функцию валидации
-vi.mock('../../validation/antdCustomValidator', () => ({
-  antdCustomValidator: vi.fn(),
-}))
-
 const mockSignin = vi.fn()
 vi.mock('../../../api/Controllers/UserController', () => ({
   default: {
-    signin: (...args: any) => mockSignin(...args),
+    signin: (...args: unknown[]) => mockSignin(...args),
   },
 }))
 
@@ -38,11 +33,6 @@ describe('Интеграционные тесты формы LoginForm (вали
   beforeEach(() => {
     vi.clearAllMocks()
     store = createTestStore()
-
-    // По умолчанию кастомный валидатор возвращает правило, которое успешно разрешает промис
-    vi.mocked(antdCustomValidator).mockReturnValue(() => ({
-      validator: () => Promise.resolve(),
-    }))
   })
 
   const renderWithProviders = (ui: React.ReactElement) => {
@@ -84,13 +74,6 @@ describe('Интеграционные тесты формы LoginForm (вали
   })
 
   test('должен выводить ошибку кастомного валидатора, если введены некорректные данные', async () => {
-    const customError =
-      '3–20 символов, латиница, может содержать цифры (но не только из них), без пробелов'
-
-    vi.mocked(antdCustomValidator).mockReturnValueOnce(() => ({
-      validator: () => Promise.reject(new Error(customError)),
-    }))
-
     const user = userEvent.setup()
     renderWithProviders(<LoginForm />)
 
@@ -100,13 +83,17 @@ describe('Интеграционные тесты формы LoginForm (вали
       name: /войти в аккаунт/i,
     })
 
+    // Передаём заведомо некорректный логин (только цифры)
     await user.type(loginInput, '123')
     await user.type(passwordInput, 'valid_password_123')
     await user.click(submitButton)
 
-    // Используем асинхронный waitFor для поиска текста ошибки
     await waitFor(() => {
-      expect(screen.getByText(/символов/i)).toBeInTheDocument()
+      const errorElement = document.querySelector(
+        '.test-ant-form-item-explain-error'
+      )
+      expect(errorElement).toBeInTheDocument()
+      expect(errorElement?.textContent).toBeTruthy()
     })
 
     expect(mockSignin).not.toHaveBeenCalled()

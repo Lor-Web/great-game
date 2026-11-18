@@ -62,13 +62,24 @@ class UserController {
 
       return await this.getUser(dispatch, signal)
     } catch (error) {
-      //Костыль если пользователь уже зарегестрирован
+      //Костыль если пользователь уже авторизован
       if (
         isHTTPError(error) &&
         error.status === 400 &&
         error.response?.includes('User already in system')
       ) {
-        await UserAPI.logout()
+        await UserAPI.logout(signal)
+
+        if (signal?.aborted || sessionVersion !== this.sessionVersion) {
+          return null
+        }
+
+        await UserAPI.signin(data, signal)
+
+        if (signal?.aborted || sessionVersion !== this.sessionVersion) {
+          return null
+        }
+
         return await this.getUser(dispatch, signal)
       }
 
@@ -200,7 +211,7 @@ class UserController {
     }
   }
 
-  //Выход их профиля
+  //Выход из профиля
   public async logout(dispatch: AppDispatch) {
     this.sessionVersion++
     this.getUserRequestId++

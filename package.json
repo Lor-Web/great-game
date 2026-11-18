@@ -11,8 +11,10 @@
     "format": "biome format --write .",
     "preview": "lerna run preview",
     "prepare": "husky",
-    "test": "lerna run test --scope=client",
-    "test:watch": "lerna run test:watch --scope=client",
+    "test": "lerna run test",
+    "test:client": "lerna run test --scope=client",
+    "test:watch": "lerna run test:watch",
+    "test:watch:client": "lerna run test:watch --scope=client",
     "test:e2e": "playwright test --project=chromium",
     "test:e2e:ui": "playwright test --project=chromium --ui"
   },
