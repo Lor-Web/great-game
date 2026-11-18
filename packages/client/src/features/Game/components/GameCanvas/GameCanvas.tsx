@@ -6,10 +6,17 @@ import styles from './game-canvas.module.css'
 interface GameCanvasProps {
   isPlaying: boolean
   selectedSkin: CharacterSkin
+  onFall: () => void
+  onComplete: () => void
 }
 
-const GameCanvas = ({ isPlaying, selectedSkin }: GameCanvasProps) => {
-  const canvasRef = useGameCanvas(isPlaying, selectedSkin)
+const GameCanvas = ({
+  isPlaying,
+  selectedSkin,
+  onFall,
+  onComplete,
+}: GameCanvasProps) => {
+  const canvasRef = useGameCanvas(isPlaying, selectedSkin, onFall, onComplete)
   return (
     <canvas
       ref={canvasRef}

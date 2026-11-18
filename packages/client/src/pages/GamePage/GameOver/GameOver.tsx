@@ -8,15 +8,16 @@ import screenStyles from '../components/GameScreen/game-screen.module.css'
 import styles from './game-over.module.css'
 
 type GameOverProps = {
+  won: boolean
   onRetry: () => void
 }
 
-export const GameOver = ({ onRetry }: GameOverProps) => {
+export const GameOver = ({ won, onRetry }: GameOverProps) => {
   const score = useSelector((state: RootState) => state.game.score)
 
   return (
     <GameScreen>
-      <h1>GAME OVER</h1>
+      <h1>{won ? 'LEVEL COMPLETE' : 'GAME OVER'}</h1>
 
       <p className={styles.score}>ВАШ СЧЁТ: {score}</p>
 

@@ -2,6 +2,7 @@ import path from 'node:path'
 import react from '@vitejs/plugin-react'
 import dotenv from 'dotenv'
 import { defineConfig } from 'vite'
+import { generateSwManifest } from './plugins/generateSwManifest'
 
 dotenv.config()
 
@@ -17,7 +18,7 @@ export default defineConfig({
   build: {
     outDir: path.join(__dirname, 'dist/client'),
   },
-  plugins: [react()],
+  plugins: [react(), generateSwManifest()],
   test: {
     globals: true,
     environment: 'jsdom',
