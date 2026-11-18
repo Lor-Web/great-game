@@ -24,7 +24,7 @@ const LoginForm: React.FC = () => {
           prefix={<UserOutlined />}
           rules={[
             { required: true, message: 'Логин' },
-            antdCustomValidator('login'),
+            antdCustomValidator('login')(),
           ]}
         />
 

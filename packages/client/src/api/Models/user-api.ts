@@ -54,8 +54,8 @@ class UserAPI extends BaseAPI {
   }
 
   //Выход пользователя из приложения
-  logout() {
-    return httpTransport.post<void>('/auth/logout', {})
+  logout(signal?: AbortSignal) {
+    return httpTransport.post<void>('/auth/logout', { signal })
   }
 
   create(data: SignUpRequest, signal?: AbortSignal) {
