@@ -177,7 +177,36 @@ class UserController {
 
       return user
     } catch (error) {
-      if (signal?.aborted || sessionVersion !== this.sessionVersion) return null
+      if (signal?.aborted || sessionVersion !== this.sessionVersion) {
+        return null
+      }
+
+      if (
+        isHTTPError(error) &&
+        error.status === 400 &&
+        error.response?.includes('User already in system')
+      ) {
+        await UserAPI.logout(signal)
+
+        if (signal?.aborted || sessionVersion !== this.sessionVersion) {
+          return null
+        }
+
+        await UserAPI.create(data, signal)
+
+        if (signal?.aborted || sessionVersion !== this.sessionVersion) {
+          return null
+        }
+
+        const user = await this.getUser(dispatch, signal)
+
+        if (!user) {
+          throw new Error('Ошибка во время входа.')
+        }
+
+        return user
+      }
+
       console.error('signup error:', error)
       throw error
     }
