@@ -7,7 +7,7 @@ import { generateSwManifest } from './plugins/generateSwManifest'
 dotenv.config()
 
 // https://vitejs.dev/config/
-export default defineConfig({
+export default defineConfig(({ isSsrBuild }) => ({
   server: {
     port: Number(process.env.CLIENT_PORT) || 3000,
   },
@@ -16,7 +16,17 @@ export default defineConfig({
     __INTERNAL_SERVER_URL__: JSON.stringify(process.env.INTERNAL_SERVER_URL),
   },
   build: {
-    outDir: path.join(__dirname, 'dist/client'),
+    outDir: isSsrBuild
+      ? path.join(__dirname, 'dist/server')
+      : path.join(__dirname, 'dist/client'),
+    rollupOptions: isSsrBuild
+      ? {
+          output: {
+            format: 'cjs',
+            entryFileNames: '[name].js',
+          },
+        }
+      : undefined,
   },
   plugins: [react(), generateSwManifest()],
   test: {
@@ -31,4 +41,4 @@ export default defineConfig({
       '**/*.e2e.{ts,tsx}',
     ],
   },
-})
+}))
