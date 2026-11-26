@@ -3,11 +3,10 @@
     "composite": true,
     "target": "es2019",
     "module": "nodenext",
-    "moduleResolution": "nodenext",
     "allowSyntheticDefaultImports": true,
     "esModuleInterop": true,
-    "skipLibCheck": true,
-    "lib": ["es2019", "DOM"]
+    "lib": ["es2019", "DOM"],
+    "moduleResolution": "nodenext"
   },
   "include": ["server/index.ts"]
 }
